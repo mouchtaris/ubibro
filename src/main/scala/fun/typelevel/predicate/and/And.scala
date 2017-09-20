@@ -57,7 +57,7 @@ object And {
     * @tparam b second evidence known
     * @return an `And` evidence for `a` and `b`
     */
-  @inline implicit def andEntails[a <: AnyRef, b <: AnyRef](implicit a: a, b: b): And[a, b] =
+  @inline implicit def andEntailed[a <: AnyRef, b <: AnyRef](implicit a: a, b: b): And[a, b] =
     And(a, b)
 
   /**
