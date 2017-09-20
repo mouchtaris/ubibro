@@ -30,6 +30,11 @@ trait Lub[a, b] {
 
 }
 
+/**
+  * Provides implicit and explicit access to Lub instances.
+  *
+  * Implicit acquisition is effectively LUB calculation.
+  */
 object Lub {
 
   /**
@@ -80,7 +85,7 @@ object Lub {
     *
     * Requiring such an instance implicitly will effectively
     * calculate the LUB of A and B, in the implicit parameter
-    * acquisition lock.
+    * acquisition call.
     *
     * @tparam a type A
     * @tparam b type B
