@@ -1,7 +1,7 @@
 package fun.typelevel.predicate
 package and
 
-import known._
+import scala.annotation.implicitNotFound
 
 /**
   * `And` is evidence that both `a` and `b` are implicitly known.
@@ -9,6 +9,7 @@ import known._
   * @tparam a type `a` which is "known"
   * @tparam b type `b` which is "known"
   */
+@implicitNotFound("It is not known that ${a} AND ${b}")
 trait And[+a, +b] {
 
   /**
@@ -56,6 +57,18 @@ object And {
     * @tparam b second evidence known
     * @return an `And` evidence for `a` and `b`
     */
-  @inline implicit def andEntails[a: Known, b: Known]: And[a, b] =
-    And(Known[a], Known[b])
+  @inline implicit def andEntails[a <: AnyRef, b <: AnyRef](implicit a: a, b: b): And[a, b] =
+    And(a, b)
+
+  /**
+    * Get the implicit evidence that `And[a, b]`, if it is known.
+    *
+    * @param and implicitly resolved
+    * @tparam a type a
+    * @tparam b type b
+    * @return an evidence instance
+    */
+  @inline def apply[a <: AnyRef, b <: AnyRef](implicit and: And[a, b]): and.type =
+    and
+
 }

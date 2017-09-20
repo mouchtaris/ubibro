@@ -1,6 +1,8 @@
 package fun.typelevel.predicate
 package known
 
+import scala.annotation.implicitNotFound
+
 /**
   * Provides implicit resolution of types while retaining type refinements
   * on the return type.
