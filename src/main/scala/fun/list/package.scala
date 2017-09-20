@@ -9,7 +9,7 @@ package object list extends AnyRef
   //
 
   /**
-    *  Implicitly decorate a list with {@link ConsOps}
+    *  Implicitly decorate a list with [[ConsOps]]
     * @param self the list instance to operate on
     * @tparam l the list's type
     */
