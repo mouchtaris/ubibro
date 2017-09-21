@@ -23,15 +23,19 @@ class KnownSpec extends FlatSpec with Matchers {
     known shouldBe known
   }
 
-  "Known" should "retain type refinement information on the implicit value used" in {
+  it should "retain type refinement information on the implicit value used" in {
     val fact = Known[Fact]
     val shape: fact.Earth = Flat
     shape shouldBe Flat
   }
 
-  "Known" should "work for singleton types as well" in {
+  it should "work for singleton types as well" in {
     implicit object Drogon
     Known[Drogon.type] shouldBe Drogon
+  }
+
+  "Known.itsatype" should "accept one type parameter" in {
+    Known.itsatype[Vector[Set[List[Map[Int, String]]]]] shouldBe Known.OK
   }
 
   //

@@ -8,9 +8,7 @@ import org.scalatest._
 
 class ListMapSpec extends FlatSpec with Matchers {
 
-  object OK
-  @inline def itsatype[t]: OK.type = OK
-
+  import Known.{ itsatype, OK }
 
   //
   // Syntax assertions

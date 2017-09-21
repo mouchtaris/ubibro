@@ -4,7 +4,7 @@ package list_typelevel
 import list._
 
 /**
-  * A type-level  map operation on a list, which maps all types in a [[List]] with
+  * A type-level  map operation on a list, which maps all types in a [[list.List]] with
   * a type constructor `F[_]`.
   */
 trait ListMap[F[_], list <: List] {
@@ -50,10 +50,10 @@ object ListMap {
     instance.asInstanceOf[Aux[f, list, out]]
 
   /**
-    * Mapping an empty list ([[Nil]]) results in the empty list.
-    * The type constructor `F[_]` is never applied to [[Nil]].
+    * Mapping an empty list ([[list.Nil]]) results in the empty list.
+    * The type constructor `F[_]` is never applied to [[list.Nil]].
     * @tparam f type constructor -- unused
-    * @return evidence for mapping a [[Nil]] list
+    * @return evidence for mapping a [[list.Nil]] list
     */
   @inline implicit def nilListMap[f[_]]: Aux[f, Nil, Nil] =
     apply()
@@ -70,10 +70,10 @@ object ListMap {
     * @tparam bMapOut the result type of mapping list's tail with type constructor `f[_]``
     * @return evidence for `a :: b`
     */
-  @inline implicit def listMap[f[_], a, b <: List, bMapOut <: List](
+  @inline implicit def listMap[f[_], a, b <: List](
     implicit
-    bMap: Aux[f, b, bMapOut]
-  ): Aux[f, a :: b, f[a] :: bMapOut] =
+    bMap: ListMap[f, b]
+  ): Aux[f, a :: b, f[a] :: bMap.Out] =
     apply()
 
 }
