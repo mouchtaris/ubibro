@@ -14,7 +14,7 @@ trait OrEntailmentThroughB {
     * @tparam b type b
     * @return evidence that `a OR b`
     */
-  @inline final def orEntailedThroughB[a, b](implicit b: b): Or[a, b] =
+  @inline final implicit def orEntailedThroughB[a, b](implicit b: b): Or[a, b] =
     Or.right(b)
 
 }

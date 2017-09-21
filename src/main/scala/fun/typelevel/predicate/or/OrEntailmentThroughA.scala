@@ -5,7 +5,7 @@ package fun.typelevel.predicate.or
   *
   * This trait is used to introduce implicit resolution order.
   */
-trait OrEntailmentThroughA {
+trait OrEntailmentThroughA extends OrEntailmentThroughB {
 
   /**
     * Provide evidence that `Or[a, b]`, because `a` is known.
@@ -14,7 +14,7 @@ trait OrEntailmentThroughA {
     * @tparam b type b
     * @return evidence that `a OR b`
     */
-  @inline final def orEntailedThroughA[a, b](implicit a: a): Or[a, b] =
+  @inline final implicit  def orEntailedThroughA[a, b](implicit a: a): Or[a, b] =
   Or.left(a)
 
 }

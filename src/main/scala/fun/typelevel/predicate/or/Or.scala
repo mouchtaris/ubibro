@@ -1,11 +1,14 @@
 package fun.typelevel.predicate.or
 
+import scala.annotation.implicitNotFound
+
 /**
   * Implicit evidence that either `a` or `b` is implicitly known.
   *
   * @tparam a type a
   * @tparam b type b
   */
+@implicitNotFound("It is not known that ${a} OR ${b}")
 trait Or[+a, +b] {
 
   /**
@@ -19,8 +22,7 @@ trait Or[+a, +b] {
   * Provide implicit instances and construction for [[Or]] evidence.
   */
 object Or extends AnyRef
-  with OrEntailmentThroughB
-  with OrEntailmentThroughA
+  with OrEntailments
 {
 
   /**

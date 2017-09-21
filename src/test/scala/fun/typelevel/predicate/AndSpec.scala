@@ -54,4 +54,5 @@ class AndSpec extends FlatSpec with Matchers {
     implicit object B
     And[A.type, B.type] should not be null
   }
+
 }
