@@ -1,11 +1,7 @@
 package fun.typelevel
 
 import
-  predicate._,
-  Known.{
-    itsatype,
-    OK,
-  }
+  predicate._
 import
   org.scalatest._
 

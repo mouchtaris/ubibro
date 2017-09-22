@@ -40,29 +40,4 @@ trait KnownCompanion {
   @inline def apply[t <: AnyRef](implicit t: t): t.type =
     t
 
-  /**
-    * The sole instance of [[OK]].
-    */
-  object OK
-
-  /**
-    * The resulting type of [[itsatype]].
-    */
-  type OK = OK.type
-
-  /**
-    * A convenience method for trying out types. This method
-    * does nothing and allows one to simply express a type in a
-    * meaningless statement.
-    *
-    * Ex:
-    * {{{
-    *   itsatype[Vector[List[Set[Map[Int, String]]]]] # => OK
-    * }}}
-    * @tparam t the type we just need tp express
-    * @return nothing useful
-    */
-  @inline def itsatype[t]: OK =
-    OK
-
 }

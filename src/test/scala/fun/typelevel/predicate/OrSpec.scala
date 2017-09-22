@@ -1,4 +1,6 @@
-package fun.typelevel.predicate
+package fun
+package typelevel
+package predicate
 
 import
   org.scalatest._
@@ -24,14 +26,16 @@ class OrSpec extends FlatSpec with Matchers {
   it should "be implicitly entailed when a is known" in {
     trait A
     implicit object A extends A
-    object AnotherA extends A
     A.asInstanceOf[Unit]
 
     trait B
     implicit object B extends B
     B.asInstanceOf[Unit]
 
-    Known[A `Or` B].evidence.left.getOrElse(AnotherA) shouldBe A
+    val or = Known[A `Or` B]
+
+    Known[or.Out =:= A] should not be null
+    or.evidence shouldBe A
   }
 
   it should "be implicitly entailed when b is known" in {
@@ -41,13 +45,15 @@ class OrSpec extends FlatSpec with Matchers {
 
     trait B
     implicit object B extends B
-    object AnotherB extends B
     B.asInstanceOf[Unit]
 
-    Known[A `Or` B].evidence.right.getOrElse(AnotherB) shouldBe B
+    val or = Known[A `Or` B]
+
+    Known[or.Out =:= B] should not be null
+    or.evidence shouldBe B
   }
 
-  it should "provide a convenience evidence fetcher" in {
+  "Or companion object" should "provide a convenience evidence fetcher" in {
     implicit object A
     implicit object B
     Or[A.type, B.type] should not be null
@@ -56,7 +62,20 @@ class OrSpec extends FlatSpec with Matchers {
   it should "prioritize evidence A over evidence B" in {
     implicit object A
     implicit object B
-    assert(Or[A.type, B.type].evidence.isLeft)
+
+    val or = Or[A.type, B.type]
+
+    Known[or.Out =:= A.type] should not be null
   }
 
+  it should "provide a type alias for Out" in {
+    itsatype[Or.Aux[Int, Double, String]] shouldBe OK
+  }
+
+  "Or.Aux" should "refine the output type" in {
+    type out = String
+    val or = Or[Int, Double, out]("")
+
+    Known[or.Out =:= out] should not be null
+  }
 }

@@ -1,4 +1,6 @@
-package fun.typelevel.predicate
+package fun
+package typelevel
+package predicate
 
 import
   org.scalatest._
@@ -34,7 +36,7 @@ class KnownSpec extends FlatSpec with Matchers {
   }
 
   "Known.itsatype" should "accept one type parameter" in {
-    Known.itsatype[Vector[Set[List[Map[Int, String]]]]] shouldBe Known.OK
+    itsatype[Vector[Set[List[Map[Int, String]]]]] shouldBe OK
   }
 
   //

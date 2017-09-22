@@ -15,9 +15,14 @@ import
 trait Or[+a, +b] {
 
   /**
+    * The type which makes this [[Or]] true.
+    */
+  type Out
+
+  /**
     * The implicitly resolved instance of either `a` or `b`.
     */
-  val evidence: Either[a, b]
+  val evidence: Out
 
 }
 
@@ -34,7 +39,19 @@ object Or extends AnyRef
     * @tparam a type a
     * @tparam b type b
     */
-  private[this] class impl[+a, +b](val evidence: Either[a, b]) extends Or[a, b]
+  private[this] class impl[+a, +b, t](val evidence: t) extends Or[a, b] {
+    type Out = t
+  }
+
+  /**
+    * A convenience type which refines the output result type `Out`.
+    * @tparam a type a
+    * @tparam b type b
+    * @tparam t type t that makes it true
+    */
+  type Aux[a, b, t] = Or[a, b] {
+    type Out = t
+  }
 
   /**
     * Construct a new evidence of type `Or[a, b]` from the given evidence.
@@ -43,28 +60,28 @@ object Or extends AnyRef
     * @tparam b type b
     * @return a new evidence instance
     */
-  @inline def apply[a, b](evidence: Either[a, b]): Or[a, b] =
+  @inline def apply[a, b, t](evidence: t): Aux[a, b, t] =
     new impl(evidence)
 
   /**
-    * Alias for `Or(Left(a))`
+    * An [[Or]] that is true because of `a`.
     * @param a `a`'s evidence
     * @tparam a type a
     * @tparam b type b
     * @return a new evidence instance
     */
-  @inline def left[a, b](a: a): Or[a, b] =
-    apply(Left(a))
+  @inline def left[a, b](a: a): Aux[a, b, a] =
+    apply(a)
 
   /**
-    * Alias for `Or(Right(b))`.
+    * An `Or` that is true because of `b`.
     * @param b `b`s evidence
     * @tparam a type a
     * @tparam b type b
     * @return a new evidence instance
     */
-  @inline def right[a, b](b: b): Or[a, b] =
-    apply(Right(b))
+  @inline def right[a, b](b: b):Aux[a, b, b] =
+    apply(b)
 
   /**
     * Get the implicit evidence that `Or[a, b]`, if it is known.

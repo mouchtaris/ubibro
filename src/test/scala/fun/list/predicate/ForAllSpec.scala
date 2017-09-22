@@ -4,11 +4,7 @@ package predicate
 
 import
   typelevel._,
-  predicate._,
-  Known.{
-    itsatype,
-    OK,
-  }
+  predicate._
 import
   org.scalatest._
 

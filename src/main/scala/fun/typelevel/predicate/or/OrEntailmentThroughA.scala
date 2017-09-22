@@ -15,7 +15,7 @@ trait OrEntailmentThroughA extends OrEntailmentThroughB {
     * @tparam b type b
     * @return evidence that `a OR b`
     */
-  @inline final implicit  def orEntailedThroughA[a, b](implicit a: a): Or[a, b] =
-  Or.left(a)
+  @inline final implicit  def orEntailedThroughA[a, b](implicit a: a): Or.Aux[a, b, a] =
+    Or.left(a)
 
 }
