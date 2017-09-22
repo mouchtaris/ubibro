@@ -1,4 +1,6 @@
-package fun.typelevel.predicate
+package fun
+package typelevel
+package predicate
 
 import
   scala.annotation.implicitNotFound

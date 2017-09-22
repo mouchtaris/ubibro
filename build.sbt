@@ -4,7 +4,7 @@ lazy val root = (project in file(".")).
   settings(
     inThisBuild(List(
       organization := "jm.ubi",
-      scalaVersion := "2.12.3",
+      scalaVersion := scala.version,
       version      := "0.1.0-SNAPSHOT"
     )),
     inThisBuild {
@@ -12,5 +12,6 @@ lazy val root = (project in file(".")).
       standard ++ inConsole ++ inDoc ++ inDocSettings
     },
     name := "Bro",
-    libraryDependencies += scalaTest % Test
+    libraryDependencies += scalaTest % Test,
+    libraryDependencies += "org.scala-lang" % "scala-reflect" % scala.version
   )
