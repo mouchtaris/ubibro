@@ -1,5 +1,5 @@
 package fun
-package list_typelevel
+package list_predicate
 
 import list._
 import typelevel.predicate.{Known, and}
