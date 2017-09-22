@@ -1,8 +1,7 @@
 package fun
 
 package object list extends AnyRef
-  with package_type_aliases
-  with colon_colon {
+  with package_type_aliases {
 
   //
   // Implicit decorations
@@ -14,5 +13,7 @@ package object list extends AnyRef
     * @tparam l the list's type
     */
   implicit class ConsOpsDeco[l <: List](val self: l) extends AnyVal with ConsOps[l]
+
+  object :: extends ConsCompanion
 
 }
