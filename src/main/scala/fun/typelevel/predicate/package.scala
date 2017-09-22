@@ -17,4 +17,8 @@ package fun.typelevel
   * by the [[list_predicate]] package, which depends on lists.
   */
 package object predicate extends AnyRef
-  with known.package_type_aliases
+  with known.package_type_aliases {
+
+  object Known extends known.Known
+
+}

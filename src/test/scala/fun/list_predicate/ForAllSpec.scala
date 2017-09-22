@@ -2,7 +2,7 @@ package fun
 package list_predicate
 
 import list._
-import typelevel.predicate.known._
+import typelevel.predicate._
 
 import org.scalatest._
 

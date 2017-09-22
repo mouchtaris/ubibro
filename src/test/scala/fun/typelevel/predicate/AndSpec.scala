@@ -1,7 +1,6 @@
 package fun.typelevel.predicate
 
 import and._
-import known._
 
 import org.scalatest._
 

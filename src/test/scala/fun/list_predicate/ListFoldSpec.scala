@@ -1,14 +1,15 @@
 package fun
 package list_predicate
 
-import list._
-import typelevel.predicate.known._
+import
+  list._,
+  typelevel.predicate._,
+  Known.{ itsatype, OK }
 
-import org.scalatest._
+import
+  org.scalatest._
 
 class ListFoldSpec extends FlatSpec with Matchers {
-
-  import Known.{ itsatype, OK }
 
   //
   // Syntax assertions
