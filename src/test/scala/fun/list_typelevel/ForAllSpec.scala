@@ -15,9 +15,30 @@ class ForAllSpec extends FlatSpec with Matchers {
   implicit object clue4 extends clue[Double]
   implicit object clue5 extends clue[Unit]
 
-  type li = Int :: String :: Short :: Double :: Unit :: Nil
+  type list = Int :: String :: Short :: Double :: Unit :: Nil
 
-  def fa(implicit f: ForAll[li, clue]): f.type = f
-  fa
+  "ForAll evidence" should "has two type parameters" in {
+    Known[ForAll[list, clue]] should not be null
+  }
+
+  it should "require the first type argument to be a list" in {
+    "Known[ForAll[Int, clue]]" shouldNot typeCheck
+  }
+
+  it should "require the second type argument to be a predicate" in {
+    "Known[ForAll[list, Tuple2]]" shouldNot typeCheck
+  }
+
+  "ForAll companion object" should "provide a constructor" in {
+    ForAll[list, Tuple1]() should not be null
+  }
+
+  "Evidence for ForAll" should "be implicitly available if implicit evidence exist for all types" in {
+    Known[ForAll[list, clue]] should not be null
+  }
+
+  it should "not be available if there is no implicit evidence for one of the types" in {
+    "Known[ForAll[java.net.URI :: list, clue]]" shouldNot compile
+  }
 
 }

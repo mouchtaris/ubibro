@@ -2,8 +2,10 @@ package fun
 package list_typelevel
 
 import list._
-import typelevel.predicate.{and, Known},
-  and.{ And }
+import typelevel.predicate.{Known, and}
+import and.And
+
+import scala.annotation.implicitNotFound
 
 /**
   * Evidence which signifies that instances of type `predicate[_]` are
@@ -11,7 +13,8 @@ import typelevel.predicate.{and, Known},
   * @tparam list a list
   * @tparam predicate a predicate type constructor
   */
-sealed abstract class ForAll[list <: List, predicate[_]]
+@implicitNotFound("No evidence that ${predicate} holds for all in ${list}")
+trait ForAll[list <: List, predicate[_]]
 
 /**
   * Provides constructors and implicit providers for evidence of type
