@@ -30,8 +30,8 @@ object ForAll {
   /**
     * Construct an instance of [[ForAll]] with the given types.
     * @tparam list the list type
-    * @tparam predicate the predicate type
-    * @return a new evidence type
+    * @tparam predicate the predicate type constructor
+    * @return a new evidence instance
     */
   @inline def apply[list <: List, predicate[_]](): ForAll[list, predicate] =
     instance.asInstanceOf[ForAll[list, predicate]]
@@ -57,4 +57,5 @@ object ForAll {
     trueForAll: ListFold[And, predicateList]#Result: Known
   ]: ForAll[list, predicate] =
     apply()
+
 }

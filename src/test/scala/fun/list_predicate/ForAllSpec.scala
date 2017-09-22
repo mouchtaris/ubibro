@@ -17,7 +17,9 @@ class ForAllSpec extends FlatSpec with Matchers {
 
   type list = Int :: String :: Short :: Double :: Unit :: Nil
 
-  "ForAll evidence" should "has two type parameters" in {
+  type NoClue = java.net.URI
+
+  "ForAll evidence" should "have two type parameters" in {
     Known[ForAll[list, clue]] should not be null
   }
 
@@ -38,7 +40,7 @@ class ForAllSpec extends FlatSpec with Matchers {
   }
 
   it should "not be available if there is no implicit evidence for one of the types" in {
-    "Known[ForAll[java.net.URI :: list, clue]]" shouldNot compile
+    "Known[ForAll[NoClue :: list, clue]]" shouldNot compile
   }
 
 }
