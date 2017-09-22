@@ -1,7 +1,7 @@
 package fun.typelevel.predicate
-package and
 
-import scala.annotation.implicitNotFound
+import
+  scala.annotation.implicitNotFound
 
 /**
   * `And` is evidence that both `a` and `b` are implicitly known.

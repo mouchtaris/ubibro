@@ -1,7 +1,6 @@
 package fun
-package list_predicate
-
-import list._
+package list
+package predicate
 
 /**
   * A type-level right-fold operation on the types of a list.
@@ -55,6 +54,15 @@ object ListFold {
     */
   type Aux[f[_, _], list <: List, out] = ListFold[f, list] {
     type Out = out
+  }
+
+  /**
+    * A convenience type alias for a conceptual `ListFold[Any, Any]`.
+    */
+  // TODO spec
+  type any = ListFold[f, list] forSome {
+    type f[_, _]
+    type list <: List
   }
 
   /**

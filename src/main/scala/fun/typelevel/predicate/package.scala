@@ -19,6 +19,6 @@ package fun.typelevel
 package object predicate extends AnyRef
   with known.package_type_aliases {
 
-  object Known extends known.Known
+  object Known extends known.KnownCompanion
 
 }

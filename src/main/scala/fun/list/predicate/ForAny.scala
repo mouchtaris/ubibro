@@ -1,11 +1,11 @@
 package fun
-package list_predicate
+package list
+package predicate
 
-import list._
-import typelevel.predicate.{Known, or}
-import or.Or
-
-import scala.annotation.implicitNotFound
+import
+  typelevel.predicate._
+import
+  scala.annotation.implicitNotFound
 
 /**
   * Evidence which signifies that instances of type `predicate[_]` are
@@ -26,6 +26,15 @@ object ForAny {
     * The sole instance of [[ForAny]], since it's a a type-level evidence type.
     */
   private[this] object instance extends ForAny[Nil, Tuple1]
+
+  /**
+    * A convenience type alias for a conceptual `ForAny[Any, Any]`.
+    */
+  // TODO spec
+  type any = ForAny[list, predicate] forSome {
+    type list <: List
+    type predicate[_]
+  }
 
   /**
     * Construct an instance of [[ForAny]] with the given types.

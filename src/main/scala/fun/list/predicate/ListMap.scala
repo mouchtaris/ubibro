@@ -1,7 +1,6 @@
 package fun
-package list_predicate
-
-import list._
+package list
+package predicate
 
 /**
   * A type-level  map operation on a list, which maps all types in a [[list.List]] with
@@ -50,6 +49,15 @@ object ListMap {
     */
   type Aux[f[_], list <: List, out <: List] = ListMap[f, list] {
     type Out = out
+  }
+
+  /**
+    * A convenience type alias for a conceptual `ListMap[Any, Any]`.
+    */
+  // TODO spec
+  type any = ListMap[f, list] forSome {
+    type f[_]
+    type list <: List
   }
 
   /**

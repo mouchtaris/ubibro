@@ -25,7 +25,7 @@ package known
   *
   * }}}
   */
-trait Known {
+trait KnownCompanion {
 
   /**
     * Implicitly resolve an instance of type `t`.

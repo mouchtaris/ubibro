@@ -2,7 +2,7 @@ package fun.typelevel.predicate
 package known
 
 /**
-  * Type aliases provided by [[Known]] to package [[predicate]].
+  * Type aliases provided by [[KnownCompanion]] to package [[predicate]].
   */
 trait package_type_aliases {
 

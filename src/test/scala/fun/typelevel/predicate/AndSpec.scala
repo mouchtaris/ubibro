@@ -1,8 +1,7 @@
 package fun.typelevel.predicate
 
-import and._
-
-import org.scalatest._
+import
+  org.scalatest._
 
 class AndSpec extends FlatSpec with Matchers {
 

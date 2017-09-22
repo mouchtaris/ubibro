@@ -1,6 +1,14 @@
-package fun.list
+package fun
+package list
 
-import org.scalatest._
+import
+  typelevel.predicate._,
+  Known.{
+    itsatype,
+    OK,
+  }
+import
+  org.scalatest._
 
 class ListSpec extends FlatSpec with Matchers {
 
@@ -23,13 +31,11 @@ class ListSpec extends FlatSpec with Matchers {
   // Type-assertive tests
   //
   "A list" should "have two parameter types" in {
-    val list: Cons[Int, Nil] = 12 :: Nil
-    list shouldBe list
+    itsatype[Cons[Int, Nil]] shouldBe OK
   }
 
   "A list" should "be type aliased as ::" in {
-    val list: Int :: Nil = 12 :: Nil
-    list shouldBe list
+    Known[(Int :: Nil) =:= Cons[Int, Nil]] should not be null
   }
 
   "A list" should "provide a terminal Nil list" in {
@@ -37,25 +43,19 @@ class ListSpec extends FlatSpec with Matchers {
   }
 
   "A list" should "be covariant on it's Head type" in {
-    val sub: ListSubHead = AA :: B :: Nil
-    val list: ListA = sub
-    list shouldBe sub
+    Known[ListSubHead <:< ListA] should not be null
   }
 
   "A list" should "be covariant on it's Tail type" in {
-    val sub: ListSubTail = A :: BB :: Nil
-    val list: ListA = sub
-    list shouldBe sub
+    Known[ListSubTail <:< ListA] should not be null
   }
 
   "Package list" should "provide ::() to prepend" in {
-    val list = 12 :: Nil
-    list shouldBe list
+    (12 :: Nil) should not be null
   }
 
   "Package list" should "provide a List type alias" in {
-    def acceptList(l: List): l.type = l
-    acceptList(12 :: Nil) should not be null
+    Known[(Int :: Nil) <:< List] should not be null
   }
 
   "A list's tail" should "be a stable name" in {

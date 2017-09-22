@@ -1,11 +1,13 @@
 package fun
-package list_predicate
+package list
+package predicate
 
 import
-  list._,
   typelevel.predicate._,
-  Known.{ itsatype, OK }
-
+  Known.{
+    itsatype,
+    OK,
+  }
 import
   org.scalatest._
 
@@ -33,13 +35,13 @@ class ListFoldSpec extends FlatSpec with Matchers {
   }
 
   it should "provide a constructor" in {
-    ListFold[Tuple2, Nil, Nil]() should not be null
+    ListFold[Tuple2, Nil, Nil]() shouldBe a[ListFold.any]
   }
 
   "ListFold() constructor" should "respect the output type" in {
-    val lf = ListFold[Tuple2, Int :: Int :: Nil, (Int, Int)]()
-    val t2: lf.Out = (12, 14)
-    t2 shouldBe t2
+    type out = String
+    val lf = ListFold[Tuple2, Nil, out]()
+    Known[lf.Out =:= out] should not be null
   }
 
   "ListFold evidence for Nil" should "not exist" in {
@@ -51,7 +53,7 @@ class ListFoldSpec extends FlatSpec with Matchers {
   }
 
   "ListFold evidence for lists with more than one item" should "be implicitly available" in {
-    Known[ListFold[Tuple2, Int :: Short :: Nil]] should not be null
+    Known[ListFold[Tuple2, Int :: Short :: Nil]] shouldBe a[ListFold.any]
   }
 
   it should "be the right associative result of the type constructor" in {

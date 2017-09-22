@@ -1,15 +1,17 @@
 package fun
-package list_predicate
+package list
+package predicate
 
 import
-  list._,
-  typelevel.predicate._
+  typelevel.predicate._,
+  Known.{
+    itsatype,
+    OK,
+  }
 import
   org.scalatest._
 
 class ListMapSpec extends FlatSpec with Matchers {
-
-  import Known.{ itsatype, OK }
 
   //
   // Syntax assertions
@@ -33,41 +35,41 @@ class ListMapSpec extends FlatSpec with Matchers {
 //    "itsatype[ListMap[Vector, Nil] { type Out = Int }]" shouldNot typeCheck
   }
 
-  it should "provide an auxiliary type, refining output types" in {
-    type f[a] = Vector[a]
-    type l = Nil
-    type out = Nil
-    new ListMap[f, l] { type Out = out }: ListMap.Aux[f, l, out]
+  "ListMap companion object" should "provide an auxiliary type" in {
+    itsatype[ListMap.Aux[Tuple1, Nil, String :: Nil]] shouldBe OK
   }
 
   it should "provide an instance constructor" in {
-    ListMap[Vector, Nil, Nil]()
+    ListMap[Vector, Nil, Nil]() shouldBe a[ListMap.any]
+  }
+
+  "ListMap.Aux" should "refine the output type" in {
+    type out = Nil
+    Known[ListMap.Aux[Vector, Nil, out]#Out =:= out] should not be null
   }
 
   "Evidence created from the constructor" should "respect the output type" in {
-    val lm = ListMap[Vector,  Nil, Int :: Nil]()
-    val intAndNil: lm.Out = 12 :: Nil
-    intAndNil shouldBe intAndNil
+    type out = String :: Nil
+    val lm = ListMap[Vector,  Nil, out]()
+    Known[lm.Out =:= out] should not be null
   }
 
   "Evidence for Nil" should "be implicitly provided" in {
-    Known[ListMap[Vector, Nil]] should not be null
+    Known[ListMap[Vector, Nil]] shouldBe a[ListMap.any]
   }
 
   it should "have result type of Nil" in {
     val nilEv = Known[ListMap[Vector, Nil]]
-    val nilList: nilEv.Out = Nil
-    nilList shouldBe Nil
+    Known[nilEv.Out =:= Nil] should not be null
   }
 
   "Evidence for any list" should "be implicitly provided" in {
-    Known[ListMap[Vector, Int :: String :: Nil]] should not be null
+    Known[ListMap[Vector, Int :: String :: Nil]] shouldBe a[ListMap.any]
   }
 
   it should "map all types in the list with type constructor f[_]" in {
     val listEv = Known[ListMap[Vector, Int :: Double :: Nil]]
-    val list: listEv.Out = Vector.empty[Int] :: Vector.empty[Double] :: Nil
-    list shouldBe list
+    Known[listEv.Out =:= (Vector[Int] :: Vector[Double] :: Nil)] should not be null
   }
 
 }

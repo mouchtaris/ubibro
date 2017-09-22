@@ -1,7 +1,7 @@
 package fun.typelevel.predicate
 
-import org.scalatest._
-
+import
+  org.scalatest._
 
 class KnownSpec extends FlatSpec with Matchers {
 

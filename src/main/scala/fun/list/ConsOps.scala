@@ -1,7 +1,8 @@
-package fun.list
+package fun
+package list
 
 import
-  fun.list.{ :: ⇒ cons }
+  list.{ :: ⇒ cons }
 
 /**
   * Extension methods on a Cons instance.

@@ -1,4 +1,5 @@
-package fun.typelevel.predicate.or
+package fun.typelevel.predicate
+package or
 
 /**
   * Provides implicit entailment of an [[Or]] through a known `b`.

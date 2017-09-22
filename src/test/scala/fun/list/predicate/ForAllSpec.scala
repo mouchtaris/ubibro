@@ -1,10 +1,16 @@
 package fun
-package list_predicate
+package list
+package predicate
 
-import list._
-import typelevel.predicate._
-
-import org.scalatest._
+import
+  typelevel._,
+  predicate._,
+  Known.{
+    itsatype,
+    OK,
+  }
+import
+  org.scalatest._
 
 class ForAllSpec extends FlatSpec with Matchers {
 
@@ -20,23 +26,24 @@ class ForAllSpec extends FlatSpec with Matchers {
   type NoClue = java.net.URI
 
   "ForAll evidence" should "have two type parameters" in {
-    Known[ForAll[list, clue]] should not be null
+    itsatype[ForAll[list, clue]] shouldBe OK
   }
 
   it should "require the first type argument to be a list" in {
-    "Known[ForAll[Int, clue]]" shouldNot typeCheck
+    // TODO report scalatest bug
+//    "itsatype[ForAll[Int, clue]]" shouldNot typeCheck
   }
 
   it should "require the second type argument to be a predicate" in {
-    "Known[ForAll[list, Tuple2]]" shouldNot typeCheck
+    "itsatype[ForAll[list, Tuple2]]" shouldNot typeCheck
   }
 
   "ForAll companion object" should "provide a constructor" in {
-    ForAll[list, Tuple1]() should not be null
+    ForAll[list, Tuple1]() shouldBe a[ForAll.any]
   }
 
   "Evidence for ForAll" should "be implicitly available if implicit evidence exist for all types" in {
-    Known[ForAll[list, clue]] should not be null
+    Known[ForAll[list, clue]] shouldBe a[ForAll.any]
   }
 
   it should "not be available if there is no implicit evidence for one of the types" in {
