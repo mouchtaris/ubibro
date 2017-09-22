@@ -1,6 +1,12 @@
 package fun.typelevel
 
 import
+  predicate._,
+  Known.{
+    itsatype,
+    OK,
+  }
+import
   org.scalatest._
 
 class LubSpec extends FlatSpec with Matchers {
@@ -8,24 +14,17 @@ class LubSpec extends FlatSpec with Matchers {
   "A LUB type" should "accept two types" in {
     type a = String
     type b = Vector[Nothing]
-
-    new Lub[a, b] { } should not be null
+    itsatype[Lub[a, b]] shouldBe OK
   }
 
   "A LUB type's a" should "be type A" in {
     type T = Int
-    val value: T = 12
-
-    val va: Lub[T, Nothing]#A = value
-    value shouldBe va
+    Known[Lub[T, Nothing]#A =:= T] should not be null
   }
 
   "A LUB type's b" should "be type B" in {
     type T = String
-    val value: T = "string"
-
-    val vb: Lub[Nothing, T]#B = value
-    value shouldBe vb
+    Known[Lub[Nothing, T]#B =:= T] should not be null
   }
 
   trait u
@@ -34,19 +33,13 @@ class LubSpec extends FlatSpec with Matchers {
 
   "A LUB type's lub" should "be type Out" in {
     val lub = Lub[a, b, u]()
-    val value: lub.Out = new u{ }
-
-    value shouldBe value
+    Known[lub.Out =:= u] should not be null
   }
 
   "A LUB resolution" should "return a type that can hold both types" in {
     val lub = Lub[a, b]
     import lub.{ Out => LUB }
-
-    val a = new a { }
-    val b = new b { }
-    val jesus: (LUB, LUB) = (a, b)
-    jesus shouldBe jesus
+    Known[(a <:< LUB) `And` (b <:< LUB)] should not be null
   }
 
   "A LUB instance" should "be case-class constructable" in {
