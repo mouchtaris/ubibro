@@ -21,6 +21,19 @@ trait ListFold[f[_, _], list <: List] {
     */
   type Out
 
+  /**
+    * Convenience type, which can be used to declare implicit
+    * parameters in type parameters.
+    *
+    * Ex
+    * {{{
+    *   def anotherWayToPutIt[f[_], list <: List, result: ListFold[f, list]#Result](result: result): result =
+    *     result
+    * }}}1
+    * @tparam out the resulting type `Out`
+    */
+  final type Result[out] = ListFold.Aux[f, list, out]
+
 }
 
 /**

@@ -15,6 +15,19 @@ trait ListMap[F[_], list <: List] {
     */
   type Out <: List
 
+  /**
+    * Convenience type, which can be used to declare implicit
+    * parameters in type parameters.
+    *
+    * Ex
+    * {{{
+    *   def anotherWayToPutIt[f[_], list <: List, result: ListMap[f, list]#Result](result: result): result =
+    *     result
+    * }}}1
+    * @tparam out the resulting type `Out`
+    */
+  final type Result[out <: List] = ListMap.Aux[F, list, out]
+
 }
 
 /**
