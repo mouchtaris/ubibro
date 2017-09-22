@@ -1,5 +1,0 @@
-package kota
-
-object incubate {
-
-}

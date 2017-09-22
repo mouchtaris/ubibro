@@ -14,7 +14,7 @@ package fun.typelevel
   * }}}
   *
   * The predicate package become interesting through its extensions, provided
-  * by the [[list_predicate]] package, which depends on lists.
+  * by the [[list.predicate]] package, which depends on lists.
   */
 package object predicate extends AnyRef
   with known.package_type_aliases {
