@@ -30,7 +30,6 @@ object ForAll {
   /**
     * A convenience type alias for a conceptual `ForAll[Any, Any]`.
     */
-  // TODO spec
   type any = ForAll[list, predicate] forSome {
     type list <: List
     type predicate[_]

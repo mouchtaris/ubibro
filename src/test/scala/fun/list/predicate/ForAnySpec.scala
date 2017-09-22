@@ -38,6 +38,10 @@ class ForAnySpec extends FlatSpec with Matchers {
     ForAny[list, Tuple1]() shouldBe a[ForAny.any]
   }
 
+  it should "provide an \"any\" type" in {
+    itsatype[ForAny.any] shouldBe OK
+  }
+
   "Evidence for ForAny" should "be implicitly available if implicit evidence exists for any type" in {
     Known[ForAny[list, clue]] shouldBe a[ForAny.any]
   }

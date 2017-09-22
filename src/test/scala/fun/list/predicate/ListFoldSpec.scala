@@ -30,8 +30,12 @@ class ListFoldSpec extends FlatSpec with Matchers {
 //    "itsatype[ListFold[Tuple2, Int]]" shouldNot typeCheck
   }
 
-  it should "provide an auxiliary type" in {
+  "ListFold companion object" should "provide an auxiliary type" in {
     itsatype[ListFold.Aux[Tuple2, Nil, Nil]] shouldBe OK
+  }
+
+  it should "provide an \"any\" type" in {
+    itsatype[ListFold.any] shouldBe OK
   }
 
   it should "provide a constructor" in {

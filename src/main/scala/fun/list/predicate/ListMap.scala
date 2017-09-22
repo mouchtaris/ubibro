@@ -54,7 +54,6 @@ object ListMap {
   /**
     * A convenience type alias for a conceptual `ListMap[Any, Any]`.
     */
-  // TODO spec
   type any = ListMap[f, list] forSome {
     type f[_]
     type list <: List

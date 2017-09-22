@@ -43,6 +43,10 @@ class ListMapSpec extends FlatSpec with Matchers {
     ListMap[Vector, Nil, Nil]() shouldBe a[ListMap.any]
   }
 
+  it should "provide an \"any\" type" in {
+    itsatype[ListMap.any] shouldBe OK
+  }
+
   "ListMap.Aux" should "refine the output type" in {
     type out = Nil
     Known[ListMap.Aux[Vector, Nil, out]#Out =:= out] should not be null

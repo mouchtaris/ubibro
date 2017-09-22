@@ -59,7 +59,6 @@ object ListFold {
   /**
     * A convenience type alias for a conceptual `ListFold[Any, Any]`.
     */
-  // TODO spec
   type any = ListFold[f, list] forSome {
     type f[_, _]
     type list <: List
