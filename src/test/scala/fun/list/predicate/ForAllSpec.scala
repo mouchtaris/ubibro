@@ -42,6 +42,12 @@ class ForAllSpec extends FlatSpec with Matchers {
     itsatype[ForAll.any] shouldBe OK
   }
 
+  "ForAll.pred[p]#t[list]" should "be an alias for ForAll" in {
+    type pred[a] = Tuple1[a]
+    type list = Int :: String :: Nil
+    Known[ForAll.pred[pred]#t[list] =:= ForAll[list, pred]] should not be null
+  }
+
   "Evidence for ForAll" should "be implicitly available if implicit evidence exist for all types" in {
     Known[ForAll[list, clue]] shouldBe a[ForAll.any]
   }

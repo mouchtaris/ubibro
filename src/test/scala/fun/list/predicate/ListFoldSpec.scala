@@ -48,8 +48,10 @@ class ListFoldSpec extends FlatSpec with Matchers {
     "Known[ListFold[Tuple2, Nil]]" shouldNot compile
   }
 
-  "ListFold evidence for a single item list" should "not exist" in {
-    "Known[ListFold[Tuple2, Int :: Nil]]" shouldNot compile
+  "ListFold evidence for a single item list" should "not fold, be return the type itself" in {
+    type t1 = String
+    val fold = Known[ListFold[Tuple2, t1 :: Nil]]
+    Known[fold.Out =:= t1] should not be null
   }
 
   "ListFold evidence for lists with more than one item" should "be implicitly available" in {

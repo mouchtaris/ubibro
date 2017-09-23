@@ -7,7 +7,11 @@ import
   typelevel._,
   typelevel.predicate._
 
-import scala.reflect.runtime.universe._
+import
+  scala.reflect.runtime.universe._
+
+object poo {
+}
 
 object Hello extends Greeting with App {
   println(greeting)

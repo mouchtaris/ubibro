@@ -36,6 +36,18 @@ object ForAny {
   }
 
   /**
+    * Convenience type alias to declare implicit parameters.
+    *
+    * Ex:
+    * {{{
+    *   def forAny[p[_], list <: List: ForAny.pred[p]#t]: Int = 42
+    * }}}
+    */
+  type pred[predicate[_]] = {
+    type t[list <: List] = ForAny[list, predicate]
+  }
+
+  /**
     * Construct an instance of [[ForAny]] with the given types.
     * @tparam list the list type
     * @tparam predicate the predicate type constructor

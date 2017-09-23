@@ -76,13 +76,15 @@ object ListFold {
     instance.asInstanceOf[Aux[f, list, out]]
 
   /**
-    * Implicit evidence for folding a two item [[list.List]].
+    * Implicit evidence for folding a list with a single element type.
+    *
+    * This list is essentially not folded, and the single element type
+    * is the result of this operation.
     * @tparam f the type constructor
-    * @tparam a the first list element type
-    * @tparam b the second list element type
-    * @return evidence for `a :: Nil`
+    * @tparam a the single type in the list
+    * @return evidence for folding `a :: Nil`, whose output type is also `a`
     */
-  @inline implicit def doubleItemListFold[f[_, _], a, b]: Aux[f, a :: b :: Nil, f[a, b]] =
+  @inline implicit def singleItemLisFold[f[_, _], a]: Aux[f, a :: Nil, a] =
     apply()
 
   /**

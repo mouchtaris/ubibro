@@ -36,6 +36,18 @@ object ForAll {
   }
 
   /**
+    * Convenience type that allows declaring implicit parameters.
+    *
+    * Ex.
+    * {{{
+    *   def forAll[pred[_], list <: List: ForAll.pred[pred]#t]: Int = 12
+    * }}}
+    */
+  type pred[predicate[_]] = {
+    type t[list <: List] = ForAll[list, predicate]
+  }
+
+  /**
     * Construct an instance of [[ForAll]] with the given types.
     * @tparam list the list type
     * @tparam predicate the predicate type constructor

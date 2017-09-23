@@ -14,12 +14,16 @@ import
   * @tparam b type b
   */
 @implicitNotFound("It is not known that ${a} OR ${b}")
-trait Or[+a, +b] {
+trait Or[a, b] {
+
+  final val lub = Known[Lub[a, b]]
+
+  final type LUB = lub.Out
 
   /**
     * The type which makes this [[Or]] true.
     */
-  type Out
+  type Out <: LUB
 
   /**
     * The implicitly resolved instance of either `a` or `b`.
