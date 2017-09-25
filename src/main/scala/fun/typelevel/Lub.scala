@@ -31,12 +31,12 @@ trait Lub[a, b] {
   /**
     * Implicit evidence that `a` conforms to `Out`
     */
-  implicit val aIsLub: a ⇒ Out
+  val aIsLub: a ⇒ Out
 
   /**
     * Implicit evidence that `b` conforms to `Out`
     */
-  implicit val bIsLub: b ⇒ Out
+  val bIsLub: b ⇒ Out
 
 }
 

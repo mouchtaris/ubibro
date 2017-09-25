@@ -44,6 +44,6 @@ package object predicate extends AnyRef
     * @return nothing useful
     */
   @inline def itsatype[t]: OK =
-  OK
+    OK
 
 }

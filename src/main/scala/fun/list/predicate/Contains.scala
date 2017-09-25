@@ -11,7 +11,7 @@ import
   * @tparam list type of a list
   * @tparam a type that is contained in the list
   */
-trait Contains[list <: List, a]
+sealed trait Contains[list <: List, a]
 
 /**
   * Provides constructors and implicit evidence for

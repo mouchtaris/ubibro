@@ -5,7 +5,8 @@ import
   list._,
   predicate._,
   typelevel._,
-  typelevel.predicate._
+  typelevel.predicate._,
+  ops._
 
 import
   scala.reflect.runtime.universe._
@@ -14,35 +15,25 @@ object poo {
 
   trait thinkaboutit {
 
-    abstract class Pika[or, a, b] {
-      type Out
-      val pick: (a, b) ⇒ Out
+    abstract class Get[list <: List, t] {
+      def apply(l: list): t
     }
 
-    object Pika {
-      type aux[or, a, b, out] = Pika[or, a, b] { type Out = out }
+    object Get {
+      implicit def getFromHead[h, t <: List]: Get[h :: t, h] =
+        (l: h :: t) => l.head
 
-      def apply[or, a, b, out](p: (a, b) ⇒ out): aux[or, a, b, out] =
-        new Pika[or, a, b] {
-          type Out = out
-          val pick: (a, b) ⇒ out = p
-        }
-
-      implicit def pickaA[
-        ora, orb, orOut: Or.resultOf[ora, orb]#t: IsType.is[ora]#t,
-        a, b, u: Lub.of[a, b]#t
-      ]: aux[Or[ora, orb], a, b, u] =
-        apply { case (a, _) ⇒ Known[Lub.Aux[a, b, u]].aIsLub(a) }
-
-      implicit def pickB[
-        ora, orb, orOut: Or.resultOf[ora, orb]#t: IsType.is[orb]#t,
-        a, b, u: Lub.of[a, b]#t
-      ]: aux[Or[ora, orb], a, b, u] =
-        apply { case (_, b) ⇒ Known[Lub.Aux[a, b, u]].bIsLub(b) }
+      implicit def getFromTail[T, h, t <: List](implicit tGet: Get[t, T]): Get[h :: t, T] =
+        (l: h :: t) => tGet(l.tail)
     }
 
   }
 
+  object User {
+    case class Email(self: String)
+    case class Password(self: String)
+  }
+  type User = (User.Email, User.Password)
 }
 
 object Hello extends Greeting with App {
@@ -50,23 +41,12 @@ object Hello extends Greeting with App {
   object tai extends thinkaboutit
   import tai._
 
-  case object a
-  type a = a.type
-  implicit case object b
-  type b = b.type
-  type or = Or[a, b]
-
-  trait u
-  case object ifa extends u
-  case object ifb extends u
-
-  Known[or]
   println {
-    Known[Pika[or, ifa.type, ifb.type]].pick(ifa, ifb)
+    Known[Get[Int :: String :: Unit :: Nil, String]]
+      .apply(12 :: "Helllo" :: () :: Nil)
   }
 
   println(greeting)
-
 }
 
 trait Greeting {

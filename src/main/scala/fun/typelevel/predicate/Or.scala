@@ -14,32 +14,12 @@ import
   * @tparam b type b
   */
 @implicitNotFound("It is not known that ${a} OR ${b}")
-trait Or[a, b] {
+sealed abstract class Or[+a, +b] {
 
   /**
-    * LUB evidence for `a` and `b`
+    * The type which makes this [[Or]] true
     */
-  final val lub = Known[Lub[a, b]]
-
-  /**
-    * An alias to `a`'s and `b`'s LUB
-    */
-  final type LUB = lub.Out
-
-  /**
-    * An alias to type `a`
-    */
-  final type A = a
-
-  /**
-    * An alias to type `b`
-    */
-  final type B = b
-
-  /**
-    * The type which makes this [[Or]] true. It conforms to `LUB`.
-    */
-  type Out <: LUB
+  type Out
 
   /**
     * The implicitly resolved instance of either `a` or `b`
@@ -54,16 +34,6 @@ trait Or[a, b] {
 object Or extends AnyRef
   with OrEntailments
 {
-
-  /**
-    * An implementation of [[Or]].
-    * @param evidence the evidence of the implicitly known instance
-    * @tparam a type a
-    * @tparam b type b
-    */
-  private[this] class impl[+a, +b, t](val evidence: t) extends Or[a, b] {
-    type Out = t
-  }
 
   /**
     * A convenience type which refines the output result type `Out`.
@@ -96,8 +66,13 @@ object Or extends AnyRef
     * @tparam b type b
     * @return a new evidence instance
     */
-  @inline def apply[a, b, t](evidence: t): Aux[a, b, t] =
-    new impl(evidence)
+  @inline def apply[a, b, t](evidence : t): Aux[a, b, t] = {
+    val ev = evidence
+    new Or[a, b] {
+      type Out = t
+      val evidence: Out = ev
+    }
+  }
 
   /**
     * An [[Or]] that is true because of `a`.

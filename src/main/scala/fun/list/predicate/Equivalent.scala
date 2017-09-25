@@ -17,7 +17,7 @@ import
   * @tparam a a list type
   * @tparam b a list type
   */
-trait Equivalent[a <: List, b <: List] {
+sealed trait Equivalent[a <: List, b <: List] {
 
   /**
    * Type of evidence provided by this evidence.
@@ -27,7 +27,7 @@ trait Equivalent[a <: List, b <: List] {
   /**
    * Implicit evidence provided by this evidence.
    */
-  implicit val evidence: Evidence
+  val evidence: Evidence
 
 }
 

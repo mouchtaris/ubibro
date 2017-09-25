@@ -7,19 +7,19 @@ package predicate
   * @tparam a type a
   * @tparam b type b
   */
-trait IsType[a, b] {
-  implicit val evidence: a =:= b
-}
+sealed abstract class IsType[a, b](
+
+  /**
+    * Evidence used to support this evidence
+    */
+  val evidence: a =:= b
+
+)
 
 /**
   * Provide constructors and implicit resolvers for evidence of type [[IsType]].
   */
 object IsType {
-
-  /**
-    * The sole instance of this evidence, since it's a type-level type.
-    */
-  private[this] class impl[a, b](val evidence: a =:= b) extends IsType[a, b]
 
   /**
     * Convenience type alias for a conceptual `IsType[Any, Any]`.
@@ -45,7 +45,7 @@ object IsType {
     * @return a new [[IsType]] instance
     */
   @inline def apply[a, b](evidence: a =:= b): IsType[a, b] =
-    new impl(evidence)
+    new IsType[a, b](evidence) { }
 
   /**
     * Implicitly provide evidence of the type equality between `a` and `b`,

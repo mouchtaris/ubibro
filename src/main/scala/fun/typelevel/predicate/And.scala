@@ -10,31 +10,20 @@ import
   * @tparam b type `b` which is "known"
   */
 @implicitNotFound("It is not known that ${a} AND ${b}")
-trait And[+a, +b] {
+sealed abstract class And[+a, +b](
 
   /**
     * The implicitly "known" value for type `a`.
     */
-  val a: a
+  val a: a,
 
   /**
     * The implicitly "known" value for type `b`.
     */
   val b: b
-
-}
+)
 
 object And {
-
-  /**
-    * An implementation of [[And]].
-    *
-    * @param a type a
-    * @param b type b
-    * @tparam a type `a` which is "known"
-    * @tparam b type `b` which is "known"
-    */
-  private[this] class impl[a, b](val a: a, val b: b) extends And[a, b]
 
   /**
     * Create a new instance of `And[a, b]`.
@@ -46,7 +35,7 @@ object And {
     * @return a new `And[a, b]` instance
     */
   @inline def apply[a, b](a: a, b: b): And[a, b] =
-    new impl(a, b)
+    new And[a, b](a, b) { }
 
 
   /**
