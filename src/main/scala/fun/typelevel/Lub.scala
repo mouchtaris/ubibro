@@ -14,19 +14,29 @@ package fun.typelevel
 trait Lub[a, b] {
 
   /**
-    * Type `a`.
+    * Type `a`
     */
   final type A = a
 
   /**
-    * Type `b`.
+    * Type `b`
     */
   final type B = b
 
   /**
-    * The LUB type of A and B.
+    * The LUB type of A and B
     */
   type Out
+
+  /**
+    * Implicit evidence that `a` conforms to `Out`
+    */
+  implicit val aIsLub: a ⇒ Out
+
+  /**
+    * Implicit evidence that `b` conforms to `Out`
+    */
+  implicit val bIsLub: b ⇒ Out
 
 }
 
@@ -38,11 +48,33 @@ trait Lub[a, b] {
 object Lub {
 
   /**
-    * The sole instance of this marker trait.
-    *
-    * An optimisation.
+    * An implementation of [[Lub]].
+    * @param aIsLub evidence that `a` conforms to `out`
+    * @param bIsLub evidence that `b` conforms to `out`
+    * @tparam a type a
+    * @tparam b type b
+    * @tparam out the LUB type of `a` and `b`
     */
-  private[this] object Instance extends Lub[Nothing, Nothing]
+  private[this] class impl[a, b, out](
+    val aIsLub: a ⇒ out,
+    val bIsLub: b ⇒ out
+  ) extends Lub[a, b] {
+    type Out = out
+  }
+
+  /**
+    * Convenience alias, that can be used in implicit parameter declarations.
+    *
+    * Ex.
+    * {{{
+    *   def lubIsU[a, b, u: Lub.of[a, b]#t](u: u): u.type = u
+    * }}}
+    * @tparam a type a
+    * @tparam b type b
+    */
+  type of[a, b] = {
+    type t[u] = Aux[a, b, u]
+  }
 
   /**
     * An "auxiliary" type, restricting result type "Out" to `lub`.
@@ -66,7 +98,7 @@ object Lub {
     * @return a LUB instance
     */
   @inline def apply[a <: lub, b <: lub, lub](): Aux[a, b, lub] =
-    Instance.asInstanceOf[Aux[a, b, lub]]
+    new impl[a, b, lub](implicitly, implicitly)
 
   /**
     * Implicitly get the instance for `Lub[a, b]`, effectively resolving
@@ -94,4 +126,5 @@ object Lub {
     */
   @inline implicit def implicitLub[a <: lub, b <: lub, lub]: Aux[a, b, lub] =
     apply()
+
 }

@@ -43,8 +43,12 @@ class LubSpec extends FlatSpec with Matchers {
     lub shouldBe lub
   }
 
-  "A LUB instance" should "be implicitly available" in {
+  it should "be implicitly available" in {
     val lub = implicitly[Lub[a, b]]
     lub shouldBe lub
+  }
+
+  "Lub.of[a, b]#t[u]" should "be an alias of Lub.Aux[a, b, u]" in {
+    Known[Lub.of[a, b]#t[u] =:= Lub.Aux[a, b, u]] should not be null
   }
 }

@@ -16,17 +16,33 @@ import
 @implicitNotFound("It is not known that ${a} OR ${b}")
 trait Or[a, b] {
 
+  /**
+    * LUB evidence for `a` and `b`
+    */
   final val lub = Known[Lub[a, b]]
 
+  /**
+    * An alias to `a`'s and `b`'s LUB
+    */
   final type LUB = lub.Out
 
   /**
-    * The type which makes this [[Or]] true.
+    * An alias to type `a`
+    */
+  final type A = a
+
+  /**
+    * An alias to type `b`
+    */
+  final type B = b
+
+  /**
+    * The type which makes this [[Or]] true. It conforms to `LUB`.
     */
   type Out <: LUB
 
   /**
-    * The implicitly resolved instance of either `a` or `b`.
+    * The implicitly resolved instance of either `a` or `b`
     */
   val evidence: Out
 
@@ -57,6 +73,20 @@ object Or extends AnyRef
     */
   type Aux[a, b, t] = Or[a, b] {
     type Out = t
+  }
+
+  /**
+    * A convenience type alias, that can be used in declaring implicit parameters.
+    *
+    * Ex.
+    * {{{
+    *   def itsTheOrResult[a, b, or: Or.resultOf[a, b]#t]: Or.Aux[a, b, or] = implicitly
+    * }}}
+    * @tparam a
+    * @tparam b
+    */
+  type resultOf[a, b] = {
+    type t[out] = Aux[a, b, out]
   }
 
   /**

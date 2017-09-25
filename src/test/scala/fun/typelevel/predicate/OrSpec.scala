@@ -78,4 +78,11 @@ class OrSpec extends FlatSpec with Matchers {
 
     Known[or.Out =:= out] should not be null
   }
+
+  "Or.resultOf" should "be an alias for Aux" in {
+    type a = Int
+    type b = String
+    type out = java.net.URI
+    Known[Or.resultOf[a, b]#t[out] =:= Or.Aux[a, b, out]] should not be null
+  }
 }
