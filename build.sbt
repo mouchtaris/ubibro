@@ -11,6 +11,11 @@ lazy val root = (project in file(".")).
       import ScalacOptions._
       standard ++ inConsole ++ inDoc ++ inDocSettings
     },
+    inThisBuild(
+      scalacOptions ++= Seq(
+        "-Xlog-implicits"
+      )
+    ),
     name := "Bro",
     libraryDependencies += scalaTest % Test,
     libraryDependencies += "org.scala-lang" % "scala-reflect" % scala.version
