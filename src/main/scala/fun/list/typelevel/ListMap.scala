@@ -1,6 +1,9 @@
 package fun
 package list
-package predicate
+package typelevel
+
+import
+  fun.typelevel.predicate._
 
 /**
   * A type-level  map operation on a list, which maps all types in a [[list.List]] with
@@ -38,7 +41,7 @@ object ListMap {
   /**
     * The sole instance of this trait, since it's a type-level trait.
     */
-  private[this] object instance extends ListMap[typelevel.predicate.Known, Nil]
+  private[this] object instance extends ListMap[Known, Nil]
 
   /**
     * An auxiliary type, which refines the type `Out` on a [[ListMap]]

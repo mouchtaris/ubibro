@@ -1,10 +1,10 @@
 package fun
 package list
-package predicate
+package typelevel
 
 import
   typelevel._,
-  predicate._
+  fun.typelevel.predicate._
 import
   org.scalatest._
 

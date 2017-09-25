@@ -1,9 +1,9 @@
 package fun
 package list
-package predicate
+package typelevel
 
 import
-  typelevel.predicate._
+  fun.typelevel.predicate._
 
 /**
   * Evidence type,, signifying that a type `a` is contained
@@ -74,7 +74,6 @@ object Contains {
 
   /**
     * Implicitly provide evidence of [[Contains]].
-    * @param evidence
     * @tparam list a list that contains type `a`
     * @tparam a a type that is contained in list of type `list`
     * @return evidence for [[Contains]]

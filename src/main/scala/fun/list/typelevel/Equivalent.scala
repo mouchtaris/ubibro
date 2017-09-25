@@ -1,9 +1,9 @@
 package fun
 package list
-package predicate
+package typelevel
 
 import
-  typelevel.predicate._
+  fun.typelevel.predicate._
 
 /**
   * Evidence singigying the equivalence of two list types.

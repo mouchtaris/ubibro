@@ -3,9 +3,9 @@ package example
 import
   fun._,
   list._,
-  predicate._,
-  typelevel._,
-  typelevel.predicate._,
+  list.typelevel._,
+  fun.typelevel._,
+  fun.typelevel.predicate._,
   ops._
 
 import

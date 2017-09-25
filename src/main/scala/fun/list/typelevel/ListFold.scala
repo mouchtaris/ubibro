@@ -1,6 +1,6 @@
 package fun
 package list
-package predicate
+package typelevel
 
 /**
   * A type-level right-fold operation on the types of a list.

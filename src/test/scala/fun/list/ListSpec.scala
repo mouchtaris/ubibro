@@ -2,7 +2,7 @@ package fun
 package list
 
 import
-  typelevel.predicate._
+  fun.typelevel.predicate._
 import
   org.scalatest._
 

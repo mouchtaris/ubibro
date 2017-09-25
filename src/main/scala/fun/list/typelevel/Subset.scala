@@ -1,6 +1,6 @@
 package fun
 package list
-package predicate
+package typelevel
 
 /**
   * Evidence type, signifying that a list type `a`
