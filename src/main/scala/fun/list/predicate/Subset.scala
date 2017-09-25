@@ -53,7 +53,10 @@ object Subset {
     * @tparam b list type that contains list type `a`
     * @return evidence that `a` is a [[Subset]] of type `b`
     */
-  @inline implicit def listSubset[a <: List, b <: List: ForAll.pred[Contains.in[b]#t]#t]: Subset[a, b] =
+  @inline implicit def listSubset[
+    a <: List: ForAll.pred[Contains.in[b]#t]#t,
+    b <: List
+  ]: Subset[a, b] =
     apply()
 
 }
