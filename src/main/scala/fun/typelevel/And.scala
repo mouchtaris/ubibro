@@ -9,19 +9,16 @@ import
   *
   * @tparam a type `a` which is "known"
   * @tparam b type `b` which is "known"
+  * @param a the implicitly "known" value for type `a`
+  * @param b the implicitly "known" value for type `b`
   */
 @implicitNotFound("It is not known that ${a} AND ${b}")
 sealed abstract class And[+a, +b](
 
-  /**
-    * The implicitly "known" value for type `a`.
-    */
   val a: a,
 
-  /**
-    * The implicitly "known" value for type `b`.
-    */
   val b: b
+
 )
 
 object And {

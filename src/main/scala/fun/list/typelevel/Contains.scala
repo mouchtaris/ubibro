@@ -33,11 +33,9 @@ object Contains {
     *   def listWithInt[list <: List: Contain.typ[Int]#t](list: list): list = list
     * }}}
     * @tparam a type contained in list
+    * @tparam list a list that should contain `a`
     */
   type typ[a] = {
-    /**
-      * @tparam list a list that should contain `a`
-      */
     type t[list <: List] = Contains[list, a]
   }
 
@@ -50,11 +48,9 @@ object Contains {
     *   def typeContainedInList[t: Contains.in[Int :: string :: Nil]#t](t: t): t = t
     * }}}
     * @tparam list a list in which a type is contained
+    * @tparam a type that should be contained in list `list`
     */
   type in[list <: List] = {
-    /**
-      * @tparam a type that should be contained in list `list`
-      */
     type t[a] = Contains.typ[a]#t[list]
   }
 

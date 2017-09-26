@@ -16,7 +16,7 @@ object OrDisambiguation {
 
     {
       implicit val ib = b
-      Known[ OrDisambiguation[a.type, b.type, ifa.type, ifb.type] ]
+      Known[ OrInterpretation[a.type, b.type, ifa.type, ifb.type] ]
         .apply(ifa, ifb)
         .onlyb() // inferred at compile that Or[a, b] is satisfied by `b`,
       // and the return type of apply() if ifb.type
@@ -24,7 +24,7 @@ object OrDisambiguation {
 
     {
       implicit val ia = a
-      Known[ OrDisambiguation[a.type, b.type, ifa.type, ifb.type] ]
+      Known[ OrInterpretation[a.type, b.type, ifa.type, ifb.type] ]
         .apply(ifa, ifb)
         .onlya()
     }

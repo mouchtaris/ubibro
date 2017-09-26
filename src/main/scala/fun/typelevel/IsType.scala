@@ -5,12 +5,10 @@ package typelevel
   * Evidence that proves type equality between types `a` and `b`.
   * @tparam a type a
   * @tparam b type b
+  * @param evidence evidence used to support this evidence
   */
 sealed abstract class IsType[a, b](
 
-  /**
-    * Evidence used to support this evidence
-    */
   val evidence: a =:= b
 
 )

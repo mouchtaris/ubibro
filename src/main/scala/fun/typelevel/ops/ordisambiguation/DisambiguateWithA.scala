@@ -2,7 +2,7 @@ package fun.typelevel
 package ops
 package ordisambiguation
 
-final case class DisambiguateWithA[ora, orb, ifa, ifb]() extends OrDisambiguation[ora, orb, ifa, ifb] {
+final case class DisambiguateWithA[ora, orb, ifa, ifb]() extends OrInterpretation[ora, orb, ifa, ifb] {
 
   type Out = ifa
 

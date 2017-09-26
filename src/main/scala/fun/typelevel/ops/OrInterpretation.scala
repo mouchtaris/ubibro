@@ -14,7 +14,7 @@ package ops
   * @tparam ifa type of result if `a` is true
   * @tparam ifb type of result if `b` is true
   */
-trait OrDisambiguation[a, b, ifa, ifb] {
+trait OrInterpretation[a, b, ifa, ifb] {
 
   /**
     * The output type, either `ifa` or `ifb`
@@ -33,9 +33,9 @@ trait OrDisambiguation[a, b, ifa, ifb] {
 }
 
 /**
-  * Provide constructors and implicit resolutions for [[OrDisambiguation]].
+  * Provide constructors and implicit resolutions for [[OrInterpretation]].
   */
-object OrDisambiguation {
+object OrInterpretation {
 
   import
     ordisambiguation.{
@@ -51,7 +51,7 @@ object OrDisambiguation {
     * @tparam ifb result type if `b`
     * @tparam out result type
     */
-  type Aux[a, b, ifa, ifb, out] = OrDisambiguation[a, b, ifa, ifb] {
+  type Aux[a, b, ifa, ifb, out] = OrInterpretation[a, b, ifa, ifb] {
     type Out = out
   }
 
