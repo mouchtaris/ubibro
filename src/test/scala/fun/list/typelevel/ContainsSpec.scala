@@ -60,8 +60,6 @@ class ContainsSpec extends FlatSpec with Matchers {
   }
 
   it should "not contain a type that is not contained in the list" in {
-    type t1 = Int
-    type list = Double :: String :: Nil
-    "Known[Contains[list, t1]]" shouldNot compile
+    "Known[Contains[Double :: String :: Nil, Int]]" shouldNot compile
   }
 }

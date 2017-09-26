@@ -9,15 +9,25 @@ object OrDisambiguation {
   def main(args: Array[String]): Unit = {
 
     case object a
-    implicit object b
+    case object b
 
-    case object ifa { object onlya }
-    case object ifb { object onlyb }
+    case object ifa { def onlya(): Unit = () }
+    case object ifb { def onlyb(): Unit = () }
 
-    Known[ OrDisambiguation[a.type, b.type, ifa.type, ifb.type] ]
-      .apply(ifa, ifb)
-      .onlyb // inferred at compile that Or[a, b] is satisfied by `b`,
-    // and the return type of apply() if ifb.type
+    {
+      implicit val ib = b
+      Known[ OrDisambiguation[a.type, b.type, ifa.type, ifb.type] ]
+        .apply(ifa, ifb)
+        .onlyb() // inferred at compile that Or[a, b] is satisfied by `b`,
+      // and the return type of apply() if ifb.type
+    }
+
+    {
+      implicit val ia = a
+      Known[ OrDisambiguation[a.type, b.type, ifa.type, ifb.type] ]
+        .apply(ifa, ifb)
+        .onlya()
+    }
 
   }
 

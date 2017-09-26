@@ -28,9 +28,7 @@ class IsTypeSpec extends FlatSpec with Matchers {
   }
 
   it should "not be implicitly available for non-same types" in {
-    type t1 = Int
-    type t2 = String
-    "Known[IsType[t1, t2]]" shouldNot compile
+    "Known[IsType[Int, String]]" shouldNot compile
   }
 
 }

@@ -3,12 +3,7 @@ package example
 import
   fun._,
   list._,
-  list.typelevel._,
-  fun.typelevel._,
-  ops._
-
-import
-  scala.reflect.runtime.universe._
+  fun.typelevel._
 
 object poo {
 

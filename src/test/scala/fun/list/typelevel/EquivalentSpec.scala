@@ -49,14 +49,13 @@ class EquivalentSpec extends FlatSpec with Matchers {
     type list4b = Int :: Unit :: String :: Nil
     type list4c = String :: Int :: Unit :: Nil
     type list4d = String :: Unit :: Int :: Nil
-    type list5 = java.net.URI :: Nil
     Known[Equivalent[list1, list1]] should not be null
     Known[Equivalent[list2, list2]] should not be null
     Known[Equivalent[list3a, list3b]] should not be null
     Known[Equivalent[list4a, list4b]] should not be null
     Known[Equivalent[list4b, list4c]] should not be null
     Known[Equivalent[list4c, list4d]] should not be null
-    "Known[Equivalent[list4d, list5]]" shouldNot compile
+    "Known[Equivalent[list4d, java.net.URI :: Nil]]" shouldNot compile
   }
 
 }
