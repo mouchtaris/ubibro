@@ -1,6 +1,6 @@
 package fun
 package typelevel
-package ops
+package interpreter
 
 /**
   * A disambiguation functor for an [[Or]] evidence.

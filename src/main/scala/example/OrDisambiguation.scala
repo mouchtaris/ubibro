@@ -2,7 +2,7 @@ package example
 
 import
   fun.typelevel._,
-  ops._
+  interpreter._
 
 object OrDisambiguation {
 
