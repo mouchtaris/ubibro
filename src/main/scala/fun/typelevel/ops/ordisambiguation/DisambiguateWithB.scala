@@ -1,4 +1,4 @@
-package fun.typelevel.predicate
+package fun.typelevel
 package ops
 package ordisambiguation
 

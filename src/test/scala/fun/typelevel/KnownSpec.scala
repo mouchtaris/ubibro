@@ -1,6 +1,5 @@
 package fun
 package typelevel
-package predicate
 
 import
   org.scalatest._

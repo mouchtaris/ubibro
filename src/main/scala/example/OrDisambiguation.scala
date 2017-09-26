@@ -1,7 +1,7 @@
 package example
 
 import
-  fun.typelevel.predicate._,
+  fun.typelevel._,
   ops._
 
 object OrDisambiguation {

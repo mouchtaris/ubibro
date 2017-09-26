@@ -5,7 +5,6 @@ import
   list._,
   list.typelevel._,
   fun.typelevel._,
-  fun.typelevel.predicate._,
   ops._
 
 import

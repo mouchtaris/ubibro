@@ -3,7 +3,7 @@ package list
 package typelevel
 
 import
-  fun.typelevel.predicate._
+  fun.typelevel._
 
 import
   org.scalatest._
@@ -21,7 +21,6 @@ class EquivalentSpec extends FlatSpec with Matchers {
   it should "require the second type argume tot be a List" in {
     "Known[Equivalent[Nil, Int]]" shouldNot typeCheck
   }
-
 
   it should "provide a Evidence type alias" in {
     type a = Int :: String :: Nil

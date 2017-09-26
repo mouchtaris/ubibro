@@ -1,4 +1,5 @@
-package fun.typelevel.predicate.or
+package fun.typelevel
+package or
 
 /**
   * Provide all implicit resolutions of `Or` evidence, with the

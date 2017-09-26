@@ -3,8 +3,7 @@ package list
 package typelevel
 
 import
-  typelevel._,
-  fun.typelevel.predicate._
+  fun.typelevel._
 import
   org.scalatest._
 

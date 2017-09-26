@@ -3,7 +3,7 @@ package list
 package typelevel
 
 import
-  fun.typelevel.predicate._
+  fun.typelevel._
 
 /**
   * Evidence singigying the equivalence of two list types.

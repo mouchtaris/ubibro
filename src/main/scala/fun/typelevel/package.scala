@@ -1,7 +1,7 @@
-package fun.typelevel
+package fun
 
 /**
-  * The [[predicate]] package provides helpful types, which makes
+  * The [[typelevel]] package provides helpful types, which makes
   * simple propositional reasoning possible in implicit parameter resolution.
   *
   * Fast-forward:
@@ -16,7 +16,7 @@ package fun.typelevel
   * The predicate package become interesting through its extensions, provided
   * by the [[list.predicate]] package, which depends on lists.
   */
-package object predicate extends AnyRef
+package object typelevel extends AnyRef
   with known.package_type_aliases {
 
   object Known extends known.KnownCompanion

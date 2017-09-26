@@ -3,7 +3,7 @@ package list
 package typelevel
 
 import
-  fun.typelevel.predicate._
+  fun.typelevel._
 
 /**
   * Evidence type,, signifying that a type `a` is contained

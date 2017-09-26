@@ -1,6 +1,5 @@
 package fun
 package typelevel
-package predicate
 
 /**
   * Evidence that proves type equality between types `a` and `b`.

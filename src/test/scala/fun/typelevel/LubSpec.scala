@@ -1,8 +1,6 @@
 package fun.typelevel
 
 import
-  predicate._
-import
   org.scalatest._
 
 class LubSpec extends FlatSpec with Matchers {

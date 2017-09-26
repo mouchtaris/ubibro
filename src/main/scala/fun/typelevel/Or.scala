@@ -1,11 +1,10 @@
 package fun
 package typelevel
-package predicate
 
 import
   scala.annotation.implicitNotFound
 import
-  fun.typelevel.predicate.or.{ OrEntailments }
+  fun.typelevel.or.{ OrEntailments }
 
 /**
   * Implicit evidence that either `a` or `b` is implicitly known.

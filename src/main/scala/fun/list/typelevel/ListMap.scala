@@ -3,7 +3,7 @@ package list
 package typelevel
 
 import
-  fun.typelevel.predicate._
+  fun.typelevel._
 
 /**
   * A type-level  map operation on a list, which maps all types in a [[list.List]] with
