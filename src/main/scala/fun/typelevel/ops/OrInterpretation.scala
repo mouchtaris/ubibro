@@ -38,7 +38,7 @@ trait OrInterpretation[a, b, ifa, ifb] {
 object OrInterpretation {
 
   import
-    ordisambiguation.{
+    or_interpretation.{
       DisambiguateWithA,
       DisambiguateWithB,
     }
@@ -64,7 +64,7 @@ object OrInterpretation {
     * @tparam ifb type of object if [[Or]] is satisfied by `b`
     * @return a disambiguator that returns `a`
     */
-  @inline implicit def disambiguateWithA[
+  @inline implicit def interpretOrA[
     ora, orb, orOut: Or.resultOf[ora, orb]#t: IsType.is[ora]#t,
     ifa, ifb
   ]: Aux[ora, orb, ifa, ifb, ifa] =
@@ -79,7 +79,7 @@ object OrInterpretation {
     * @tparam ifb type of object if [[Or]] is satisfied by `b`
     * @return a disambiguator that returns `b`
     */
-  @inline implicit def disambiguateWithB[
+  @inline implicit def interpretOrB[
     ora, orb, orOut: Or.resultOf[ora, orb]#t: IsType.is[orb]#t,
     ifa, ifb
   ]: Aux[ora, orb, ifa, ifb, ifb] =

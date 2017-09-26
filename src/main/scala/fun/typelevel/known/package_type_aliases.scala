@@ -1,8 +1,9 @@
-package fun.typelevel
+package fun
+package typelevel
 package known
 
 /**
-  * Type aliases provided by [[KnownCompanion]] to package [[predicate]].
+  * Type aliases provided by [[KnownCompanion]] to package [[typelevel]].
   */
 trait package_type_aliases {
 
@@ -23,4 +24,5 @@ trait package_type_aliases {
     * @tparam a the predicate that is known
     */
   final type Known[a] = a
+
 }

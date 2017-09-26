@@ -1,6 +1,6 @@
 package fun.typelevel
 package ops
-package ordisambiguation
+package or_interpretation
 
 final case class DisambiguateWithB[ora, orb, ifa, ifb]() extends OrInterpretation[ora, orb, ifa, ifb] {
 
