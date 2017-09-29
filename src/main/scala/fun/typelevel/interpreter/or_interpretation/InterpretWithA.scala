@@ -2,11 +2,11 @@ package fun.typelevel
 package interpreter
 package or_interpretation
 
-final case class DisambiguateWithB[ora, orb, ifa, ifb]() extends OrInterpretation[ora, orb, ifa, ifb] {
+final case class InterpretWithA[ora, orb, ifa, ifb]() extends OrInterpretation[ora, orb, ifa, ifb] {
 
-  type Out = ifb
+  type Out = ifa
 
   @inline def apply(implicit ifa: ifa, ifb: ifb): Out =
-    ifb
+    ifa
 
 }

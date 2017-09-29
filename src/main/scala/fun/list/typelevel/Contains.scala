@@ -6,8 +6,8 @@ import
   fun.typelevel._
 
 /**
-  * Evidence type,, signifying that a type `a` is contained
-  * in a list of type `list`.,,
+  * Evidence type, signifying that a type `a` is contained
+  * in a list of type `list`.
   * @tparam list type of a list
   * @tparam a type that is contained in the list
   */

@@ -6,7 +6,7 @@ import
   fun.typelevel._
 
 /**
-  * Evidence singigying the equivalence of two list types.
+  * Evidence singigying (signifying) the equivalence of two list types.
   *
   * Two list types are equivalent when they contain the same
   * types, in any amount of duplication and any reordering.

@@ -39,8 +39,8 @@ object OrInterpretation {
 
   import
     or_interpretation.{
-      DisambiguateWithA,
-      DisambiguateWithB,
+      InterpretWithA,
+      InterpretWithB,
     }
 
   /**
@@ -68,7 +68,7 @@ object OrInterpretation {
     ora, orb, orOut: Or.resultOf[ora, orb]#t: IsType.is[ora]#t,
     ifa, ifb
   ]: Aux[ora, orb, ifa, ifb, ifa] =
-    DisambiguateWithA()
+    InterpretWithA()
 
   /**
     * Implicitly provide a "B" disambugator if [[Or]] is satisfied by `b`.
@@ -83,6 +83,6 @@ object OrInterpretation {
     ora, orb, orOut: Or.resultOf[ora, orb]#t: IsType.is[orb]#t,
     ifa, ifb
   ]: Aux[ora, orb, ifa, ifb, ifb] =
-    DisambiguateWithB()
+    InterpretWithB()
 
 }
