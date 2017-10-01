@@ -62,6 +62,11 @@ object Interpretation {
   }
 
   /**
+    * A convenience type alias for a conceptual `Interpretation[Any]` type
+    */
+  type any = Interpretation[_]
+
+  /**
     * An implementation of [[Interpretation]]
     * @param f the runtime behaviour
     * @tparam t evidence type
