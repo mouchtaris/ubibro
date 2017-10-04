@@ -2,7 +2,11 @@ package fun
 package interpretation
 
 import
-  typelevel._
+  typelevel._,
+  list.{
+    Nil,
+    ::,
+  }
 
 import
   org.scalatest._
@@ -27,15 +31,15 @@ class InterpretationSpec extends FlatSpec with Matchers {
   }
 
   it should "provide a function for runtime behaviour" in {
-    Interpretation[Int, Int, Int] { int ⇒ int ⇒ int }.f should not be null
+    Interpretation[Int, Int :: Nil, Int] { int ⇒ int.head }.f should not be null
   }
 
   "Interpretation companion object" should "provide a Aux type alias" in {
-    itsatype[ Interpretation.Aux[Int, Int, Int] ] shouldBe OK
+    itsatype[ Interpretation.Aux[Int, Int :: Nil, Int] ] shouldBe OK
   }
 
   it should "provide a constructor" in {
-    Interpretation[Int, Int, Int] { int ⇒ _ ⇒ int } shouldBe a[Interpretation.any]
+    Interpretation[Int, Int :: Nil, Int] { int ⇒ int.head } shouldBe a[Interpretation.any]
   }
 
   "Interpretation.any" should "be a type alias" in {
@@ -44,9 +48,9 @@ class InterpretationSpec extends FlatSpec with Matchers {
 
   "Instances created by the constructor" should "have the specified types" in {
     type ev = Int
-    type in = Unit
+    type in = Unit :: Nil
     type out = String
-    val int = Interpretation[ev, in, out] { _ ⇒ _ ⇒ "hello" }
+    val int = Interpretation[ev, in, out] { _ ⇒ "hello" }
     Known[ int.In =:= in ] should not be null
     Known[ int.Out =:= out ] should not be null
     Known[ int.Evidence =:= ev ] should not be null
@@ -63,7 +67,7 @@ class InterpretationSpec extends FlatSpec with Matchers {
 
   "Interpretation.Aux" should "be a type alias for Interpretation" in {
     type ev = Int
-    type in = String
+    type in = String :: Nil
     type out = Unit
     type aux = Interpretation.Aux[ev, in, out]
     Known[ aux#Evidence =:= ev ] should not be null

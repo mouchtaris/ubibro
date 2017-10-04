@@ -3,8 +3,8 @@ package fun.list
 /**
   * A consecutive list junction.
   *
-  * @tparam a type of list Head
-  * @tparam b type of list Tail
+  * @tparam Head type of list Head
+  * @tparam Tail type of list Tail
   */
 trait Cons[+Head, +Tail <: List] {
 

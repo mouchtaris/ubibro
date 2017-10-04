@@ -4,7 +4,10 @@ package typelevel
 import
   scala.annotation.implicitNotFound
 import
-  fun.typelevel.or.{ OrEntailments }
+  or.{
+    OrEntailments,
+    InterpretationProvider,
+  }
 
 /**
   * Implicit evidence that either `a` or `b` is implicitly known.
@@ -32,6 +35,7 @@ sealed abstract class Or[+a, +b] {
   */
 object Or extends AnyRef
   with OrEntailments
+  with InterpretationProvider
 {
 
   /**
