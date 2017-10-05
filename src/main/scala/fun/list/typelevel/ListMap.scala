@@ -6,7 +6,7 @@ import
   fun.typelevel._
 
 /**
-  * A type-level  map operation on a list, which maps all types in a [[list.List]] with
+  * A type-level  map operation on a list, which maps all types in a [[List]] with
   * a type constructor `F[_]`.
   */
 trait ListMap[F[_], list <: List] {
