@@ -4,10 +4,13 @@ package or
 
 import
   list.{
-    List,
+    List
+  },
+  list.typelevel.{
+    Concat
   },
   interpretation.{
-    Interpretation,
+    Interpretation
   }
 
 /**
@@ -18,7 +21,7 @@ import
 final class OrInterpretationB[
   a: Interpretation.withInOut[ain, aout]#t,
   b: Or.resultOf[a, b]#t: Interpretation.withInOut[bin, bout]#t,
-  ain <: List, aout,
+  ain <: List: Concat.to[bin]#t, aout,
   bin <: List, bout,
   rest <: List
 ] private() extends OrInterpretation[a, b, ain, aout, bin, bout, rest] {
@@ -45,7 +48,7 @@ object OrInterpretationB {
   @inline def apply[
     a: Interpretation.withInOut[ain, aout]#t,
     b: Or.resultOf[a, b]#t: Interpretation.withInOut[bin, bout]#t,
-    ain <: List, aout,
+    ain <: List: Concat.to[bin]#t, aout,
     bin <: List, bout,
     rest <: List
   ](): OrInterpretationB[a, b, ain, aout, bin, bout, rest] =

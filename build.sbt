@@ -15,3 +15,4 @@ lazy val root = (project in file(".")).
     libraryDependencies += scalaTest % Test,
     libraryDependencies += "org.scala-lang" % "scala-reflect" % scala.version
   )
+//  .enablePlugins(ScalaNativePlugin)

@@ -7,7 +7,7 @@ import
   fun.typelevel.{
     Known,
     itsatype,
-    OK,
+    OK
   }
 
 class ConcatSpec extends FlatSpec with Matchers {

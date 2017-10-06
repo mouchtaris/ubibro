@@ -6,7 +6,7 @@ import
 import
   or.{
     OrEntailments,
-    InterpretationProvider,
+    InterpretationProvider
   }
 
 /**

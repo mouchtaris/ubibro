@@ -4,11 +4,14 @@ package or
 
 import
   list.{
-    List,
+    List
+  },
+  list.typelevel.{
+    Concat
   },
   interpretation.{
     Interpretation,
-    Rest,
+    Rest
   }
 
 /**
@@ -30,7 +33,7 @@ trait InterpretationProvider {
   @inline implicit def interpretationA[
     a: Or.resultOf[a, b]#t: Interpretation.withInOut[ain, aout]#t,
     b: Interpretation.withInOut[bin, bout]#t,
-    ain <: List, aout,
+    ain <: List: Concat.to[bin]#t, aout,
     bin <: List, bout,
     rest <: List: Rest
   ]: OrInterpretationA[a, b, ain, aout, bin, bout, rest] =
@@ -46,7 +49,7 @@ trait InterpretationProvider {
   @inline implicit def interpretationB[
     a: Interpretation.withInOut[ain, aout]#t,
     b: Or.resultOf[a, b]#t: Interpretation.withInOut[bin, bout]#t,
-    ain <: List, aout,
+    ain <: List: Concat.to[bin]#t, aout,
     bin <: List, bout,
     rest <: List: Rest
   ]: OrInterpretationB[a, b, ain, aout, bin, bout, rest] =

@@ -3,7 +3,7 @@ package interpretation
 
 import
   list.{
-    List,
+    List
   }
 
 /**

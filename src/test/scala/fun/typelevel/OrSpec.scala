@@ -13,11 +13,9 @@ class OrSpec extends FlatSpec with Matchers {
   it should "not be implicitly entailed when both a and b are not known" in {
     trait A
     object A extends A
-    A.asInstanceOf[Unit]
 
     trait B
     object B extends B
-    B.asInstanceOf[Unit]
 
     "Known[A `Or` B]" shouldNot compile
   }
@@ -25,11 +23,9 @@ class OrSpec extends FlatSpec with Matchers {
   it should "be implicitly entailed when a is known" in {
     trait A
     implicit object A extends A
-    A.asInstanceOf[Unit]
 
     trait B
     implicit object B extends B
-    B.asInstanceOf[Unit]
 
     val or = Known[A `Or` B]
 
@@ -40,11 +36,9 @@ class OrSpec extends FlatSpec with Matchers {
   it should "be implicitly entailed when b is known" in {
     trait A
     object A extends A
-    A.asInstanceOf[Unit]
 
     trait B
     implicit object B extends B
-    B.asInstanceOf[Unit]
 
     val or = Known[A `Or` B]
 

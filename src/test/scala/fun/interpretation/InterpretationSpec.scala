@@ -5,7 +5,7 @@ import
   typelevel._,
   list.{
     Nil,
-    ::,
+    ::
   }
 
 import

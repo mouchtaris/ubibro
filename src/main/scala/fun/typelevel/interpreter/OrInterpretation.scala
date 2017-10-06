@@ -40,7 +40,7 @@ object OrInterpretation {
   import
     or_interpretation.{
       InterpretWithA,
-      InterpretWithB,
+      InterpretWithB
     }
 
   /**

@@ -44,6 +44,17 @@ object Concat {
   type any = Aux[_ <: List, _ <: List, _ <: List]
 
   /**
+    * A convenience type alias, to allow declaring implicit parameters
+    * {{{
+    *   def con[a <: List: Concat.to[b]#t, b <: List]
+    * }}}
+    * @tparam b
+    */
+  type to[b <: List] = {
+    type t[a <: List] = Concat[a, b]
+  }
+
+  /**
     * Construct an instance of [[Concat]] with the given types.
     * @tparam a [[Concat]] type parameter `a`
     * @tparam b [[Concat]] type parameter `b`

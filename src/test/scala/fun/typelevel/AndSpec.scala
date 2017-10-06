@@ -26,11 +26,9 @@ class AndSpec extends FlatSpec with Matchers {
   it should "not be implicitly entailed when a is not known" in {
     trait A
     object A extends A
-    A.asInstanceOf[Unit]
 
     trait B
     implicit object B extends B
-    B.asInstanceOf[Unit]
 
     "Known[A `And` B]" shouldNot compile
   }
@@ -38,11 +36,9 @@ class AndSpec extends FlatSpec with Matchers {
   it should "not be implicitly entailed when b is not known" in {
     trait A
     implicit object A extends A
-    A.asInstanceOf[Unit]
 
     trait B
     object B extends B
-    B.asInstanceOf[Unit]
 
     "Known[A `And` B]" shouldNot compile
   }
