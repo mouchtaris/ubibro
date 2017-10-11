@@ -25,4 +25,22 @@ trait ConsCompanion {
   def apply[a, b <: List](head: a, tail: b): Cons[a, b] =
     new impl(head, tail)
 
+  /**
+    * Typical deconstruct for lists:
+    * {{{
+    *   def tailTail[a, b, t <: List](list: a :: b :: tail): t =
+    *     list match {
+    *       case _ :: _ :: tail ⇒ tail
+    *     }
+    * }}}
+    * @param list a list
+    * @tparam h list head type
+    * @tparam t list tail type
+    * @return always a pair of `(head, tail)`
+    */
+  def unapply[h, t <: List](list: h :: t): Option[(h, t)] =
+    Some {
+      (list.head, list.tail)
+    }
+
 }
