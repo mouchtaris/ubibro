@@ -27,15 +27,11 @@ class InterpretationSpec extends FlatSpec with Matchers {
 
   it should "provide an Evidence type alias" in {
     type ev = Any
-    Known[ Interpretation[ev]#Evidence =:= ev ] should not be null
+    Known[ Interpretation[ev]#T =:= ev ] should not be null
   }
 
   it should "provide a function for runtime behaviour" in {
     Interpretation[Int, Int :: Nil, Int] { int ⇒ int.head }.f should not be null
-  }
-
-  "Interpretation companion object" should "provide a Aux type alias" in {
-    itsatype[ Interpretation.Aux[Int, Int :: Nil, Int] ] shouldBe OK
   }
 
   it should "provide a constructor" in {
@@ -46,6 +42,13 @@ class InterpretationSpec extends FlatSpec with Matchers {
     itsatype[ Interpretation.any ] shouldBe OK
   }
 
+  "Interpretation.withInOut" should "be a type alias" in {
+    type in = Int
+    type out = String
+    type ev = Unit
+    Known[ Interpretation.withInOut[in, out]#t[ev] =:= Interpretation.Aux[ev, in, out] ] should not be null
+  }
+
   "Instances created by the constructor" should "have the specified types" in {
     type ev = Int
     type in = Unit :: Nil
@@ -53,7 +56,7 @@ class InterpretationSpec extends FlatSpec with Matchers {
     val int = Interpretation[ev, in, out] { _ ⇒ "hello" }
     Known[ int.In =:= in ] should not be null
     Known[ int.Out =:= out ] should not be null
-    Known[ int.Evidence =:= ev ] should not be null
+    Known[ int.T =:= ev ] should not be null
   }
 
   it should "use the given runtime behaviour" in {
@@ -70,7 +73,7 @@ class InterpretationSpec extends FlatSpec with Matchers {
     type in = String :: Nil
     type out = Unit
     type aux = Interpretation.Aux[ev, in, out]
-    Known[ aux#Evidence =:= ev ] should not be null
+    Known[ aux#T =:= ev ] should not be null
     Known[ aux#In =:= in ] should not be null
     Known[ aux#Out =:= out ] should not be null
   }
