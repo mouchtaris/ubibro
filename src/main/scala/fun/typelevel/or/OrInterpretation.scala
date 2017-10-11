@@ -5,34 +5,48 @@ package or
 import
   list.{
     List,
+    Nil,
     ::,
+  },
+  list.typelevel.{
+    Concat,
+  },
+  list.typelevel.concat.{
+    ConcatInterpretation,
   },
   interpretation.{
     Interpretation,
+    Rest
   }
 
-/**
-  * An interpretation of [[Or]].
-  *
-  * A runtime interpretation of [[Or]] accepts two instances, of types `a` and `b`,
-  * and returns either `a` or `b`, depending on which type makes this [[Or]] evidence come true.
-  * @param interpa An interpretation of type `a`
-  * @param interpb An interpretaion of type `b`
-  * @tparam a [[Or]] type `a`
-  * @tparam b [[Or]] type `b`
-  * @tparam rest the unused part of the input list
-  */
-abstract class OrInterpretation[
-  a: Interpretation.withInOut[ain, aout]#t,
-  b: Interpretation.withInOut[bin, bout]#t,
+final case class OrInterpretation[
+  a,
+  b,
   ain <: List, aout,
   bin <: List, bout,
-  rest <: List
-] extends interpretation.Interpretation[Or[a, b]] {
+  rest <: List,
+  out
+    : OrEvidence.resultOf[a, b, aout, bout]#t,
+  binrest <: List
+    : Concat.resultOf[bin, rest]#t
+    : ConcatInterpretation.inputOf[bin, rest]#t,
+  in <: List
+    : Concat.resultOf[ain, binrest]#t
+    : ConcatInterpretation.inputOf[ain, binrest]#t,
+]()(
+  implicit
+  evidence: OrEvidence.Aux[a, b, aout, bout, out],
+  interpa: Interpretation.Aux[a, ain, aout],
+  interpb: Interpretation.Aux[b, bin, bout]
+) extends Interpretation[Or[a, b]] {
 
-  /**
-    * The input type for an [[Or]] interpretation.
-    */
-  final type In = ain :: bin :: rest
+  type In = in
+
+  type Out = out
+
+  val f: in ⇒ out = {
+    case Concat(interpa(aout) :: Concat(interpb(bout) :: _ ) :: _) ⇒
+      evidence(aout)(bout)
+  }
 
 }

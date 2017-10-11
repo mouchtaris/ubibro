@@ -65,6 +65,19 @@ object ConcatInterpretation {
     with ConcatInterpretation[a, b, in]
 
   /**
+    * Convenience type alias for declaring implicit parameters
+    *
+    * {{{
+    *   def nothingUseful[a <: List, b <: List, in <: List: ConcatInterpretation.resultOf[a, b]#t] = ????
+    * }}}
+    * @tparam a list type `a`
+    * @tparam b list type `b`
+    */
+  type inputOf[a <: List, b <: List]  = {
+    type t[in <: List] = ConcatInterpretation[a, b, in]
+  }
+
+  /**
     * Construct an instance of this interpreter.
     *
     * This constructor is also available as an implicit conversion
