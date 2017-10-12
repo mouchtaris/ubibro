@@ -17,7 +17,7 @@ package fun
   * by the [[list.predicate]] package, which depends on lists.
   */
 package object typelevel extends AnyRef
-  with known.package_type_aliases {
+  with known.KnownPackage {
 
   object Known extends known.KnownCompanion
 

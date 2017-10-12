@@ -5,7 +5,7 @@ package known
 /**
   * Type aliases provided by [[KnownCompanion]] to package [[typelevel]].
   */
-trait package_type_aliases {
+trait KnownPackage {
 
   /**
     * Indicate that type "a" is known.
