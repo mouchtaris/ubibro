@@ -2,7 +2,6 @@ package example
 
 import fun._,
   list._,
-  list.typelevel._,
   fun.typelevel._,
   interpretation._
 
@@ -34,7 +33,6 @@ object pig {
   }
 
 }
-import pig._
 
 
 object ors {

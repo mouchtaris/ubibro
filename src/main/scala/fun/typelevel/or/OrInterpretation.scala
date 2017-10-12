@@ -5,7 +5,6 @@ package or
 import
   list.{
     List,
-    Nil,
     ::,
   },
   list.typelevel.{
@@ -16,7 +15,6 @@ import
   },
   interpretation.{
     Interpretation,
-    Rest
   }
 
 final case class OrInterpretation[

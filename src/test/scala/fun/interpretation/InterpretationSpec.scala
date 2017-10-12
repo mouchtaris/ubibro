@@ -73,6 +73,7 @@ class InterpretationSpec extends FlatSpec with Matchers {
     type in = String :: Nil
     type out = Unit
     type aux = Interpretation.Aux[ev, in, out]
+    itsatype[ aux ] shouldBe OK
     Known[ aux#T =:= ev ] should not be null
     Known[ aux#In =:= in ] should not be null
     Known[ aux#Out =:= out ] should not be null
