@@ -19,14 +19,14 @@ import
   * All interpreters define their input in the form of a list in type `In`,
   * which is then followed by an arbitrary "tail", defined by the `rest`
   * type parameter. This allows arbitrary input for interpreters to be
-  * combined in a single [[List]], from which sub-interpreters extract
+  * combined in a single [[list.List]], from which sub-interpreters extract
   * their part of input.
   *
-  * `rest` is bound by [[Rest]], which makes it be [[Nil]] by default,
-  * but can also be any other [[List]] type. This way, top-level interpreters
+  * `rest` is bound by [[Rest]], which makes it be [[list.Nil]] by default,
+  * but can also be any other [[list.List]] type. This way, top-level interpreters
   * can request sub-interpreters that accept lists with the "rest" of
   * useless input appended at the end. All this is thanks to
-  * [[list.typelevel.Concat]] and [[list.typelevel.concat.ConcatInterpreter]]
+  * [[list.typelevel.Concat]] and [[list.typelevel.concat.ConcatInterpretation]]
   * magic.
   *
   * @tparam t a type for which the interpretation is defined

@@ -46,7 +46,7 @@ object IsType {
 
   /**
     * Implicitly provide evidence of the type equality between `a` and `b`,
-    * if there is a scala provided [[=:=]] evidence implicitly known.
+    * if there is a scala provided `=:=` evidence implicitly known.
     * @param ev scala type equality evidence
     * @tparam a type a
     * @tparam b type b

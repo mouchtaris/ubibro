@@ -40,7 +40,7 @@ object Subset {
     * Implicit evidence that [[Nil]] is a subset of any
     * list type
     * @tparam list any list type
-    * @return evidence [[Subset[Nil, list]]]
+    * @return evidence [[Subset]]`[Nil, list]`
     */
   @inline implicit def nilSubset[list <: List]: Subset[Nil, list] =
     apply()

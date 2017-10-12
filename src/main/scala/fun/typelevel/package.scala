@@ -14,7 +14,7 @@ package fun
   * }}}
   *
   * The predicate package become interesting through its extensions, provided
-  * by the [[list.predicate]] package, which depends on lists.
+  * by the [[list.typelevel]] package, which depends on lists.
   */
 package object typelevel extends AnyRef
   with known.KnownPackage {
