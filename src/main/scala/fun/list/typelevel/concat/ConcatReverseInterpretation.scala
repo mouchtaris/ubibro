@@ -124,7 +124,7 @@ object ConcatReverseInterpretation {
     implicit
     tbconcat: ConcatReverseInterpretation[t, b, tb]
   ): ConcatReverseInterpretation[h :: t, b, h :: tb] =
-    ConcatInterpretation {
+    ConcatReverseInterpretation {
       case h :: Concat(t :: b :: Nil) ⇒
         (h :: t) :: b :: Nil
     }
