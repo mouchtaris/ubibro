@@ -11,7 +11,7 @@ import
     Concat,
   },
   list.typelevel.concat.{
-    ConcatInterpretation,
+    ConcatReverseInterpretation,
   },
   interpretation.{
     Interpretation,
@@ -27,10 +27,12 @@ final case class OrInterpretation[
     : OrEvidence.resultOf[a, b, aout, bout]#t,
   binrest <: List
     : Concat.resultOf[bin, rest]#t
-    : ConcatInterpretation.inputOf[bin, rest]#t,
+    : ConcatReverseInterpretation.inputOf[bin, rest]#t
+    ,
   in <: List
     : Concat.resultOf[ain, binrest]#t
-    : ConcatInterpretation.inputOf[ain, binrest]#t,
+    : ConcatReverseInterpretation.inputOf[ain, binrest]#t
+    ,
 ]()(
   implicit
   evidence: OrEvidence.Aux[a, b, aout, bout, out],

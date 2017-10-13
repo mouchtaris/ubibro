@@ -4,7 +4,7 @@ package typelevel
 
 import
   concat.{
-    ConcatInterpretation,
+    ConcatReverseInterpretation,
   }
 
 /**
@@ -94,7 +94,7 @@ object Concat {
     list: ab
   )(
     implicit
-    concat: ConcatInterpretation[a, b, ab]
+    concat: ConcatReverseInterpretation[a, b, ab]
   )
   : Option[a :: b :: Nil] =
     Some(concat(list))

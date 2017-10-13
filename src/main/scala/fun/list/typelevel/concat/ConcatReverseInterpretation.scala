@@ -9,9 +9,9 @@ import
   }
 
 /**
-  * A [[Concat]] interpretation.
+  * A reverse [[Concat]] interpretation.
   *
-  * A concat interpretation at runtime is able to dis-join two list, `a` and `b`.
+  * A reverse concat interpretation at runtime is able to dis-join two list, `a` and `b`.
   *
   * The input type is defined as an explicit parameter.
   *
@@ -19,7 +19,7 @@ import
   * @tparam b a list type `b`
   * @tparam in the input list type of this interpretation
   */
-trait ConcatInterpretation[a <: List, b <: List, in <: List] extends Interpretation[Concat[a, b]] {
+trait ConcatReverseInterpretation[a <: List, b <: List, in <: List] extends Interpretation[Concat[a, b]] {
 
   /**
     * The input type for this interpretation.
@@ -50,10 +50,10 @@ trait ConcatInterpretation[a <: List, b <: List, in <: List] extends Interpretat
 /**
   * Provide constructors and implicit resolution for this interpreter.
   */
-object ConcatInterpretation {
+object ConcatReverseInterpretation {
 
   /**
-    * An implementation of [[ConcatInterpretation]]
+    * An implementation of [[ConcatReverseInterpretation]]
     * @param f runtime behaviour
     * @tparam a a list type `a`
     * @tparam b a list type `b`
@@ -62,7 +62,7 @@ object ConcatInterpretation {
   private[this] final class impl[a <: List, b <: List, in <: List](
     val f: in ⇒ a :: b :: Nil
   ) extends AnyRef
-    with ConcatInterpretation[a, b, in]
+    with ConcatReverseInterpretation[a, b, in]
 
   /**
     * Convenience type alias for declaring implicit parameters
@@ -74,7 +74,7 @@ object ConcatInterpretation {
     * @tparam b list type `b`
     */
   type inputOf[a <: List, b <: List]  = {
-    type t[in <: List] = ConcatInterpretation[a, b, in]
+    type t[in <: List] = ConcatReverseInterpretation[a, b, in]
   }
 
   /**
@@ -89,7 +89,7 @@ object ConcatInterpretation {
     * @tparam in type param `in`
     * @return an interpreter
     */
-  implicit def apply[a <: List, b <: List, in <: List](f: in ⇒ a :: b :: Nil): ConcatInterpretation[a, b, in] =
+  implicit def apply[a <: List, b <: List, in <: List](f: in ⇒ a :: b :: Nil): ConcatReverseInterpretation[a, b, in] =
     new impl[a, b, in](f)
 
   /**
@@ -97,7 +97,7 @@ object ConcatInterpretation {
     * @tparam b a list type
     * @return an interpreter
     */
-  implicit def concatInterpretationNil[b <: List: Concat.resultOf[Nil, b]#t]: ConcatInterpretation[Nil, b, b] =
+  implicit def concatInterpretationNil[b <: List: Concat.resultOf[Nil, b]#t]: ConcatReverseInterpretation[Nil, b, b] =
     // Implicit construction
     (b: b) ⇒
       Nil :: b :: Nil
@@ -122,8 +122,8 @@ object ConcatInterpretation {
     tb <: List: Concat.resultOf[t, b]#t
   ](
     implicit
-    tbconcat: ConcatInterpretation[t, b, tb]
-  ): ConcatInterpretation[h :: t, b, h :: tb] =
+    tbconcat: ConcatReverseInterpretation[t, b, tb]
+  ): ConcatReverseInterpretation[h :: t, b, h :: tb] =
     ConcatInterpretation {
       case h :: Concat(t :: b :: Nil) ⇒
         (h :: t) :: b :: Nil

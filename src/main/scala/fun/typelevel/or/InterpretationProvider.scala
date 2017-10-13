@@ -10,7 +10,7 @@ import
     Concat,
   },
   list.typelevel.concat.{
-    ConcatInterpretation,
+    ConcatReverseInterpretation,
   },
   interpretation.{
     Interpretation,
@@ -35,10 +35,12 @@ trait InterpretationProvider {
     rest <: List: Rest,
     binrest <: List
       : Concat.resultOf[bin, rest]#t
-      : ConcatInterpretation.inputOf[bin, rest]#t,
+      : ConcatReverseInterpretation.inputOf[bin, rest]#t
+      ,
     in <: List
       : Concat.resultOf[ain, binrest]#t
-      : ConcatInterpretation.inputOf[ain, binrest]#t
+      : ConcatReverseInterpretation.inputOf[ain, binrest]#t
+      ,
   ]: OrInterpretation[a, b, ain, aout, bin, bout, rest, aout, binrest, in] =
     OrInterpretation()
 
@@ -51,10 +53,10 @@ trait InterpretationProvider {
     rest <: List: Rest,
     binrest <: List
       : Concat.resultOf[bin, rest]#t
-      : ConcatInterpretation.inputOf[bin, rest]#t,
+      : ConcatReverseInterpretation.inputOf[bin, rest]#t,
     in <: List
       : Concat.resultOf[ain, binrest]#t
-      : ConcatInterpretation.inputOf[ain, binrest]#t
+      : ConcatReverseInterpretation.inputOf[ain, binrest]#t
   ]: OrInterpretation[a, b, ain, aout, bin, bout, rest, bout, binrest, in] =
     OrInterpretation()
 
