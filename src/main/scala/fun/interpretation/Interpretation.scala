@@ -26,7 +26,7 @@ import
   * but can also be any other [[list.List]] type. This way, top-level interpreters
   * can request sub-interpreters that accept lists with the "rest" of
   * useless input appended at the end. All this is thanks to
-  * [[list.typelevel.Concat]] and [[list.typelevel.concat.ConcatReverseInterpretation]]
+  * [[list.typelevel.Concat]] and [[list.typelevel.concat.ConcatInterpretation]]
   * magic.
   *
   * @tparam t a type for which the interpretation is defined

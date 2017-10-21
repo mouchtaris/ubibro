@@ -2,11 +2,6 @@ package fun
 package list
 package typelevel
 
-import
-  concat.{
-    ConcatReverseInterpretation,
-  }
-
 /**
   * A type-level operation which concatenates two list types into one.
   * @tparam a list type in the front
@@ -24,7 +19,10 @@ trait Concat[a <: List, b <: List] {
 /**
   * Provides constructors and implicit resolution for type constructor [[Concat]].
   */
-object Concat {
+object Concat extends AnyRef
+  with concat.InterpretationProvider
+  with concat.Unapply
+{
 
   /**
     * The sole instance of this type, since it's a type-level marker type.
@@ -85,18 +83,5 @@ object Concat {
     concat: Concat[a, b]
   ): Aux[h :: a, b, h :: concat.Out] =
     apply()
-
-  def unapply[
-    a <: List,
-    b <: List,
-    ab <: List: Concat.resultOf[a, b]#t
-  ](
-    list: ab
-  )(
-    implicit
-    concat: ConcatReverseInterpretation[a, b, ab]
-  )
-  : Option[a :: b :: Nil] =
-    Some(concat(list))
 
 }
