@@ -130,6 +130,10 @@ object Interpretation {
     type t[T] = Aux[T, in, out]
   }
 
+  type inputOf[T, out] = {
+    type t[in] = Aux[T, in, out]
+  }
+
   /**
     * An implementation of [[Interpretation]]
     * @param f the runtime behaviour

@@ -21,6 +21,6 @@ trait ConsOps[l <: List] extends Any {
     * @tparam c the new head's type
     * @return `c :: self`
     */
-  def ::[c](c: c): c :: l = cons(c, self)
+  @inline def ::[c](c: c): c :: l = cons(c, self)
 
 }

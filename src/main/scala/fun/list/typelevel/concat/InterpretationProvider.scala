@@ -31,7 +31,7 @@ trait InterpretationProvider {
   h,
   t <: List,
   b <: List,
-  tb <: List
+  tb <: List: Concat.resultOf[t, b]#t
   ](
     implicit
     tbconcat: ConcatInterpretation[t, b, tb]

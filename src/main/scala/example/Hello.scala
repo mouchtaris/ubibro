@@ -88,31 +88,9 @@ import ors._
 object poo {
 
   def main(args: Array[String]): Unit = {
-//    println { interpab(ca :: cb :: Nil) }
-//    println { interpbc(cb :: cc :: Nil) }
-//    println { interpabc(ca :: cb :: cc :: Nil) }
-
-    object spezl { def f = 12 }
-    type a = Int :: String :: Nil
-    type b = Unit :: spezl.type :: Nil
-    val li = 12 :: "Hello" :: () :: spezl :: Nil
-    //val inter = Known[Interpretation[Concat[a, b]]]
-    import list.typelevel.concat.ConcatInterpretation
-    val inter: ConcatInterpretation[Int :: (String :: fun.list.Nil),b,Int :: (String :: b)] =
-      Known.apply[Interpretation[Concat[a,b]]](
-        Concat.concatInterpretationList[Int, String :: fun.list.Nil, b, String :: b](
-          Concat.concatInterpretationList[String, fun.list.Nil, b, b](
-            Concat.concatInterpretationNil[b](
-              Concat.prependNil[Unit :: spezl.type :: fun.list.Nil]
-            )
-          )
-        )
-      );
-
-    val wat = inter(li)
-    val watwat = wat.tail.head
-    val watwatwat = watwat.f
-    println { watwatwat }
+    println { interpab(ca :: cb :: Nil) }
+    println { interpbc(cb :: cc :: Nil) }
+    println { interpabc(ca :: cb :: cc :: Nil) }
   }
 
 }

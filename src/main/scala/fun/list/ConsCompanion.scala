@@ -22,7 +22,7 @@ trait ConsCompanion {
     * @tparam b list's tail type
     * @return a new `head :: tail` Cons instance
     */
-  def apply[a, b <: List](head: a, tail: b): Cons[a, b] =
+  @inline def apply[a, b <: List](head: a, tail: b): Cons[a, b] =
     new impl(head, tail)
 
   /**
