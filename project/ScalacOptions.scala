@@ -16,8 +16,8 @@ object ScalacOptions {
     "-unchecked",                        // Enable additional warnings where generated code depends on assumptions.
     "-Xcheckinit",                       // Wrap field accessors to throw an exception on uninitialized access.
 //    "-Xfatal-warnings",                  // Fail the compilation if there are any warnings.
-    "-Xprint:typer",
-    "-Xlog-implicits",
+//    "-Xprint:typer",
+//    "-Xlog-implicits",
     "-Xfuture",                          // Turn on future language features.
     "-Xlint:adapted-args",               // Warn if an argument list is modified to match the receiver.
     "-Xlint:by-name-right-associative",  // By-name parameter of right associative operator.
