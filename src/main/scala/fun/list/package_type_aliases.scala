@@ -10,22 +10,7 @@ trait package_type_aliases extends Any {
     *   def acceptList[l <: List](l: l): l.type = l
     * }}}
     */
-  type List = (a :: b) forSome {
-
-    type a
-    type b <: (c :: d) forSome {
-
-      type c
-      type d <: (e :: f) forSome {
-
-        type e
-        type f // probably no use to go deeper than this
-
-      }
-
-    }
-
-  }
+  type List = _ :: (_ <: (_ :: _))
 
   /**
     * A type alias for [[Cons]].

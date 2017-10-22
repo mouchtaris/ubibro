@@ -23,4 +23,4 @@ trait Nil extends (Nothing :: Nil) {
 /**
   * The single instance of [[Nil]].
   */
-object Nil extends Nil
+case object Nil extends Nil

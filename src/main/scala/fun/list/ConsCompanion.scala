@@ -12,7 +12,10 @@ trait ConsCompanion {
     * @tparam a type of list Head
     * @tparam b type of list Tail
     */
-  private[this] final class impl[a, b <: List](val head: a, val tail: b) extends Cons[a, b]
+  private[this] final class impl[a, b <: List](val head: a, val tail: b) extends Cons[a, b] {
+    override def toString: String =
+      s"$head :: $tail"
+  }
 
   /**
     * Create a Cons instance with the given head and tail.
