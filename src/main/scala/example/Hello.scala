@@ -16,7 +16,9 @@ object pig {
   }
 
   object Pig {
-    def pig[t: Pig]: Pig[t] = implicitly
+    @inline def pig[t: Pig]: Pig[t] = implicitly
+    @inline def apply[t: Pig]: Pig[t] = pig
+    @inline def pig[t: Pig](t: t): Pig[t] = pig
 
     implicit def orpig[a: Pig, b: Pig]: Pig[Or[a, b]] = Pig {
       s"Or[${pig[a]}, ${pig[b]}]"
