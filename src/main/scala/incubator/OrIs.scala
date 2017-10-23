@@ -8,7 +8,7 @@ trait OrIs {
   ](
     implicit
     interpa: Interpretation[a],
-    interpb: Interpretation[b]
+    interpb: Interpretation[b],
   ): OrI.aux[
     a,
     b,
