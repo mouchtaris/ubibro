@@ -1,5 +1,31 @@
 package incubator
 
+object HereIsTheThing {
+
+  /**
+   * Assume we are modeling functions that instead of requiring a specific
+   * input argument type, they require that any input given has an implicit
+   * "view" as a typeclass/effect.
+   */
+  // Effect-function
+  trait FFunc {
+    type In[t]
+    type Out
+    def apply[t: In](in: t): Out
+  }
+
+  /**
+   * Now suppose that we model some data structures, which we need to map to
+   * runtime behaviour through implicitly known "type traits", one of which specifies
+   * the [[FFunc]] used to model their behaviour.
+   */
+  trait Command 
+  trait CommandBehaviour[command <: Command] {
+    type ffunc <: FFunc
+  }
+
+}
+
 object wat {
 
   /**
