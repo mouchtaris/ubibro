@@ -1,134 +1,198 @@
 package incubator
 
-object HereIsTheThing {
+/** Here Is The Thing 1 */
+object hitt1 {
 
-  /**
-   * Assume we are modeling functions that instead of requiring a specific
-   * input argument type, they require that any input given has an implicit
-   * "view" as a typeclass/effect.
-   */
-  // Effect-function
-  trait FFunc {
-    type In[t]
+  //
+  // Let's assume we are modelling commands as Data Types
+  //
+  trait Command
+
+  //
+  // And then let's assume we're modelling their runtime behaviour
+  // as type-classes.
+  //
+  // Interpretations have one quirk: they apply a type transformation
+  // to their input type.
+  //
+  // A real life reason for this is that we reuse a single object as an
+  // argument to many Interpretations, by providing views to it.
+  // Consider a (Haskel) list (Shapeless HList) example:
+  //
+  //    type in1[rest <: List] = String :: Int :: rest
+  //    type in2[rest <: List] = Float :: Unit :: rest
+  //    type in12[rest <: List] = in1[in2[rest]]
+  //        // ⇒ String :: Int :: Float :: Unit :: rest
+  //
+  trait Interpretation[comm <: Command] {
+    type In[a]
     type Out
-    def apply[t: In](in: t): Out
-  }
-
-  /**
-   * Now suppose that we model some data structures, which we need to map to
-   * runtime behaviour through implicitly known "type traits", one of which specifies
-   * the [[FFunc]] used to model their behaviour.
-   */
-  trait Command 
-  trait CommandBehaviour[command <: Command] {
-    type ffunc <: FFunc
-  }
-
-}
-
-object wat {
-
-  /**
-   * A "type class", "implicit evidence" type, etc...
-   *
-   * @tparam t just for looks, and facilitate
-   *  the implicit resolution scenario
-   */
-  trait fo[t] {
-    /**
-     * An abstract type member THAT IS A TYPE CONSTRUCTOR
-     */
-    type f[_]
+    def apply[a](in: In[a]): Out
   }
 
   //
-  // Types that will be used for `fo`'s abstract type `f[_]`
+  // At some point, we will naturally need to combine our interpretations.
+  // In keeping this example as generic as possible, we define this combination
+  // in terms of combining the inputs and the outputs of two interpretations.
   //
-  trait F1[t]
-  trait F2[t]
-  //
-  // Couple of case for type class `fo`
-  //
-  trait loo
-  implicit object loo extends loo with fo[loo] {
-    type f[t] = F1[t]
-  }
-  //
-  trait poo
-  implicit object poo extends poo with fo[poo] {
-    type f[t] = F2[t]
+
+  // Abstract combining inputs
+  trait CombinedInput[in1[_], in2[_]] {
+    type in[_]
+    def to1[a](in: in[a]): in1[_]
+    def to2[a](in: in[a]): in2[_]
   }
 
-  // Double checking, this compiles
-  val w0 = implicitly[ fo[loo] ]
-  val w1 = implicitly[ fo[poo] ]
+  // Abstract combining outputs
+  trait CombineOutput[out1, out2] {
+    type out
+    def apply(out1: out1, out2: out2): out
+  }
 
-  /**
-   * *** PROBLEM HERE ***
-   *
-   * A method call, in which the abstract TYPE CONSTRUCTOR type member
-   * needs to be inferred by the compiler.
-   *
-   * This fails to be implicitly resolved, because the compiler
-   * fails to instantiate the type parameters, (probably) because
-   * it is unable to infer abstract type `f`. See further below
-   * for the failed invocation.
-   *
-   */
-  def fu0[t, in[_]](t: t)(
-    implicit
-    fo: fo[t] { type f[a] = in[a] }
-  ): String = s"Hi $t: $fo"
+  // Define combination command transformation
+  trait Combine[comm1 <: Command, comm2 <: Command] extends Command
+  type ++[comm1 <: Command, comm2 <: Command] = Combine[comm1, comm2]
 
-  trait Trait[f[_]]
+  // Define a refining type alias for Interpretation
+  type InterpInOut[comm <: Command, in[_], out] = Interpretation[comm] {
+    type In[a] = in[a]
+    type Out = out
+  }
 
-  // These will work find, since we explicitly set type param `in`
-  val w2 = fu0[loo, F1](loo: loo)
-  val w3 = fu0[poo, F2](poo: poo)
-
-  // *** PROBLEM HERE ***
-  // The following fails to compile
-  val w4 = fu0(loo: loo) // type ascription for test simplification
-  val w5 = fu0(poo: poo) // type ascription for test simplification
+  // Define an interpretation for combined commands
+  //
+  // In order to express the required inputs (such as input/output
+  // combination evidence), we need (among others) the `In`
+  // type-constructors from each interpretation to be explicitly
+  // in the type parameters list.
+  //
+  // For the same reason we need the `Out` abstract types.
+  //
+  final case class CombineInterpretations[
+    comm1 <: Command,
+    comm2 <: Command,
+    in1[_], out1,
+    in2[_], out2,
+  ](
+    interp1: InterpInOut[comm1, in1, out1],
+    interp2: InterpInOut[comm2, in2, out2],
+    combineInputs: CombinedInput[in1, in2],
+    combineOutputs: CombineOutput[out1, out2],
+  ) extends Interpretation[ comm1 ++ comm2 ] {
+    type In[a] = combineInputs.in[a]
+    type Out = combineOutputs.out
+    def apply[a](in: In[a]): Out = {
+      val in1: in1[_] = combineInputs to1 in
+      val in2: in2[_] = combineInputs to2 in
+      val out1: out1 = interp1(in1)
+      val out2: out2 = interp2(in2)
+      val out: Out = combineOutputs(out1, out2)
+      out
+    }
+  }
 
   //
-  // Error message:
+  // A sample use case for all of the above, as "addition"
   //
-  // (notice the "type f has one type parameter, but type in has one"
-  //  part of the error)
-  //
-  // [info] .../incubator/Main.scala:64:15: poo is not a valid implicit value for incubator.wat.fo[incubator.wat.poo]{type f[a] = in[a]} because:
-  // [info] type parameters weren't correctly instantiated outside of the implicit tree: inferred kinds of the type arguments (incubator.wat.poo.f[t]) do not conform to the expected kinds of the type parameters (type in).
-  // [info] incubator.wat.poo.f[t]'s type parameters do not match type in's expected parameters:
-  // [info] type f has one type parameter, but type in has one
-  // [info]   val w5 = fu0(poo: poo) // type ascription for test simplification
-  // [info]               ^
-  // [info] .../incubator/Main.scala:64:15: incubator.this.wat.poo is not a valid implicit value for incubator.wat.fo[incubator.wat.poo]{type f[a] = in[a]} because:
-  // [info] type parameters weren't correctly instantiated outside of the implicit tree: inferred kinds of the type arguments (incubator.wat.poo.f[t]) do not conform to the expected kinds of the type parameters (type in).
-  // [info] incubator.wat.poo.f[t]'s type parameters do not match type in's expected parameters:
-  // [info] type f has one type parameter, but type in has one
-  // [info]   val w5 = fu0(poo: poo) // type ascription for test simplification
-  // [info]               ^
-  // [error] .../incubator/Main.scala:64:15: could not find implicit value for parameter fo: incubator.wat.fo[incubator.wat.poo]{type f[a] = in[a]}
-  // [error]   val w5 = fu0(poo: poo) // type ascription for test simplification
-  // [error]               ^
-  // [error] two errors found
-  // [error] (compile:compileIncremental) Compilation failed
-  // [error] Total time: 1 s, completed Oct 22, 2017 4:48:35 PM
-  //
+  object sample {
+    final abstract class Add extends Command
 
-}
+    // Input type transformers
+    final case class HasInt[a](int: Int, other: a)
 
-object Main extends Samples {
+    case object AddI extends Interpretation[Add] {
+      type In[a] = HasInt[a]
+      type Out = Int
+      def apply[a](in: In[a]): Int = in.int + 1
+    }
+
+    case object CombineHasInt
+      extends CombinedInput[HasInt, HasInt]
+    {
+      type in[a] = HasInt[HasInt[a]]
+      def to1[a](in: in[a]): HasInt[a] = HasInt(in.int, in.other.other)
+      def to2[a](in: in[a]): HasInt[a] = in.other
+    }
+
+    case object CombineInt
+      extends CombineOutput[AddI.Out, AddI.Out]
+    {
+      type out = Int
+      def apply(a: Int, b: Int): Int = a + b
+    }
+
+    val combin: CombinedInput[AddI.In, AddI.In] =
+      CombineHasInt
+    val combout: CombineOutput[AddI.Out, AddI.Out] =
+      CombineInt
+    val interp1: InterpInOut[Add, AddI.In, AddI.Out] =
+      AddI
+    val interp2: InterpInOut[Add, AddI.In, AddI.Out] =
+      AddI
+
+    final case class combo[
+      f1,
+      f2,
+      combin <: CombinedInput[AddI.In, AddI.In],
+      combout,
+    ](
+      interp1: f1,
+      interp2: f2,
+      combin: combin,
+      combout: combout,
+    ) {
+      type Wat = (f1, f2)
+    }
+
+    val combined = combo(
+      interp1 = AddI,
+      interp2 = AddI,
+      combin = combin,
+      combout = combout,
+    )
+
+    import pig._
+    implicit val AddIPig: Pig[AddI.type] = "AddI"
+    implicit val AddPig: Pig[Add] = "Add"
+    implicit val IntPig: Pig[Int] = "Int"
+    implicit val UnitPig: Pig[Unit] = "Unit"
+    implicit def CombineOutputPig[a: Pig, b: Pig]: Pig[CombineOutput[a, b]] =
+      s"CombineOutput[${pig[a]}, ${pig[b]}]"
+    implicit def HasIntPig[a: Pig]: Pig[HasInt[a]] =
+      s"HasInt[${pig[a]}]"
+    implicit def CombinedInputPig[ain[_], bin[_]](
+      implicit
+      pigain: Pig[ain[Unit]],
+      pigbin: Pig[bin[Unit]]
+    ): Pig[CombinedInput[ain, bin]] =
+      s"CombinedInput[${pigain}, ${pigbin}]"
+  }
+
+  object pig {
+    def apply[t: Pig]: Pig[t] = implicitly
+    final implicit class Pig[+t](val name: String) extends AnyVal {
+      override def toString: String = name
+    }
+    object Pig {
+      val xxx: Pig[Any] = "XXX"
+      implicit def t2pig[a: Pig, b: Pig]: Pig[(a, b)] = s"(${pig[a]}, ${pig[b]})"
+    }
+  }
 
   def main(args: Array[String]): Unit = {
-    { Known[Pig[ca]]; pig[ca]; }.asInstanceOf[Unit]
-    Known[ Interpretation[ca] ]
-    val interp = Known[ Interpretation[ Or[ca, cb]] ]
-
+    import sample._
     println {
-      interp(ia() :: ib() :: "hello" :: 12 :: Nil)
+      pig[combined.Wat]
     }
   }
 
 }
+
+object Main {
+
+  def main(args: Array[String]): Unit = {
+    hitt1.main(args)
+  }
+
+}
+
