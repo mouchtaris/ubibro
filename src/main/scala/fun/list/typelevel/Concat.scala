@@ -20,7 +20,6 @@ trait Concat[a <: List, b <: List] {
   * Provides constructors and implicit resolution for type constructor [[Concat]].
   */
 object Concat extends AnyRef
-  with concat.InterpretationProvider
   with concat.Unapply
 {
 

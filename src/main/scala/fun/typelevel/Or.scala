@@ -6,7 +6,6 @@ import
 import
   or.{
     OrEntailments,
-    InterpretationProvider,
   }
 
 /**
@@ -35,7 +34,6 @@ sealed abstract class Or[+a, +b] {
   */
 object Or extends AnyRef
   with OrEntailments
-  with InterpretationProvider
 {
 
   /**
