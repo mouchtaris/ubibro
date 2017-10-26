@@ -1,76 +1,88 @@
 package incubator
 
-import
-  fun.typelevel._,
-  fun.list._,
-  fun.interpretation._
+import fun.typelevel._, fun.list._, fun.interpretation._
 
 
 object incubation {
 
-  sealed trait OrEv
-  case object OrEvA extends OrEv
-  case object OrEvB extends OrEv
+  type FC1[f[_, _], a[_], b[_]] = {
+    type t[T] = f[ a[T], b[T] ]
+  }
+
+  type I[T, in[_], out] = Interpretation[T] {
+    type In[a] = in[a]
+    type Out = out
+  }
+
+  abstract class abi[
+    c,
+    in[_],
+    out
+  ] extends Interpretation[c] {
+    final type In[a] = in[a]
+    final type Out = out
+  }
 
   final case class OrI[
-    Ca,
-    Cb,
-    Ia <:,
-    Ib
+    ca,
+    cb,
+    ain[_], aout,
+    bin[_], bout,
   ](
-    interpa: Interpretation[Ca],
-    interpb: Interpretation[Cb],
-    ev: OrEv
-  ) extends Interpretation[Or[Ca, Cb]] {
-
-    type In[a] = And[interpa.In[a], interpb.In[a]]
-
-    type Out
-
-    def apply[a: In](a: a): Out = ev match {
-      case OrEvA => ???
-      case OrEvB => ???
-    }
-
+    interpa: I[ca, ain, aout],
+    interpb: I[cb, bin, bout],
+  ) extends abi[
+    (ca `Or` cb),
+    FC1[And, ain, bin]#t,
+    (aout, bout),
+  ] {
+    implicit def ina[a: In]: interpa.In[a] = implicitly[In[a]].a
+    implicit def inb[a: In]: interpb.In[a] = implicitly[In[a]].b
+    def apply[a: In](a: a): Out = 
+      (interpa(a), interpb(a))
+    override def toString: String = "I OR(" + interpa + ", " + interpb + ")"
   }
 
-  implicit def orIa[Ca: Or.resultOf[Ca, Cb]#t, Cb](
+  implicit def orI[
+    ca,
+    cb,
+  ](
     implicit
-    interpa: Interpretation[Ca],
-    interpb: Interpretation[Cb],
-  ): OrI[Ca, Cb] =
-    OrI(interpa, interpb, OrEvA)
-
-  implicit case object Oa; type Oa = Oa.type
-  implicit case object Ob; type Ob = Ob.type
-  trait Clue[t]
-  implicit object Ca extends Clue[Oa]
-  implicit object Cb extends Clue[Ob]
-  object Clue {
-    implicit def t2[a: Clue, b: Clue]: Clue[(a, b)] = new Clue[(a, b)] { }
-  }
-  implicit case object Ia extends Interpretation[Oa] {
-    type In[a] = Clue[a]
-    type Out = Int
-    def apply[a: In](a: a): Out = 12
-  }
-  implicit case object Ib extends Interpretation[Ob] {
-    type In[a] = Clue[a]
-    type Out = String
-    def apply[a: In](a: a): Out = "fuck off harry"
-  }
+    interpa: Interpretation[ca],
+    interpb: Interpretation[cb],
+  ):
+    OrI[
+      ca, cb,
+      interpa.In, interpa.Out,
+      interpb.In, interpb.Out,
+    ]
+  =
+    new OrI[
+      ca, cb,
+      interpa.In, interpa.Out,
+      interpb.In, interpb.Out,
+    ](interpa, interpb)
 
 }
 
 object Main {
   import incubation._
+  import sample._
 
   def main(args: Array[String]): Unit = println {
     Vector(
-      Known[And[Clue[Oa], Clue[Ob]]],
-      Known[Interpretation[Or[Oa, Ob]]],
-      Known[Interpretation[Or[Oa, Ob]]].apply( Oa )
+      Known[Interpretation[OA]].apply(OA),
+      Known[Interpretation[OA]].apply(OB),
+      Known[Interpretation[OB]].apply(OA),
+      Known[Interpretation[OB]].apply(OB),
+      Known[Clue[OA]],
+      Known[Clue[OB]],
+      Known[Clue[OA] `And` Clue[OB]],
+      Known[Clue[OA] `Or` Clue[OB]],
+      Known[Interpretation[Or[OA, OB]]],
+      Known[Interpretation[Or[OA, OB]]].apply(OA),
     )
+      .zip(1 to 1000).map { case (s, i) => f"$i%03d: $s" }.mkString("\n")
   }
 
 }
