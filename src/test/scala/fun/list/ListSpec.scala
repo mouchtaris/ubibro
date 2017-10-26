@@ -56,7 +56,7 @@ class ListSpec extends FlatSpec with Matchers {
 
   "A list's tail" should "be a stable name" in {
     val list: List = Nil
-    import list.tail.tail.tail
+    import list.tail.tail
     tail shouldBe tail
   }
 
