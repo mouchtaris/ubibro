@@ -34,22 +34,22 @@ object interpretation {
 object disjunction {
   import Known._
 
-  abstract class ||[a, b] {
+  trait ||[a, b] {
     type Out <: a | b
     val evidence: Out
   }
 
   object || {
 
-    implicit def orA[a: Known, b]: a || b = new ||[a, b] {
-      type Out = a
-      val evidence: a = known
+    case class ||[a, b, out <: a | b](
+      evidence: out
+    ) extends disjunction.||[a, b] {
+      type Out = out
     }
 
-    implicit def orB[a, b: Known]: a || b = new ||[a, b] {
-      type Out = b
-      val evidence: b = known
-    }
+    implicit def orA[a, b](implicit a: a): ||[a, b, a.type] = ||(a)
+
+    implicit def orB[a, b](implicit b: b): ||[a, b, b.type] = ||(b)
 
   }
 
@@ -256,7 +256,8 @@ object Pig extends AnyRef
     list._,
     istype._,
     Known._,
-    interpretation._
+    interpretation._,
+    disjunction._
 
   final implicit class pig[t](@inline override val toString: String) extends AnyVal
 
@@ -275,7 +276,7 @@ object Pig extends AnyRef
 
     implicit def list[h: pig, t <: List: pig]: pig[h :: t] = s"${pig[h]} :: ${pig[t]}"
     implicit def istype[a: pig, b: pig]: pig[IsType[a, b]] = s"${pig[a]} <<: ${pig[b]}"
-
+    implicit def disjunction[a: pig, b: pig]: pig[a || b] = s"${pig[a]} || ${pig[b]}"
   }
 
 }
@@ -368,7 +369,8 @@ object Main {
     typeops._,
     Known._,
     Pig._,
-    incubate._
+    incubate._,
+    disjunction._
 
   def main(args: Array[String]): Unit = {
     println("Hello world!")
@@ -376,7 +378,14 @@ object Main {
     type isint[t] = IsType[t, Int]
     type l0 = String :: Uri :: Int :: Unit :: Nil
     val lm = known[tmap[isint, l0]]
-    pig[lm.Out].sp
+    val lf = known[tfold[||, lm.Out]]
+    println("****************************")
+    print  ("* "); pig[lm.Out].sp
+    print  ("* "); pig[lf.Out].sp
+    println("****************************")
+    known[Int <<: Int].sp
+    known[Int <<: Int || Uri <<: Int].sp
+    known[String <<: Int || Int <<: Int || Uri <<: Int].sp
   }
 
   def msg = "I was compiled by dotty :)"
