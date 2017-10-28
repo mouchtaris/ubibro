@@ -1,6 +1,7 @@
 import scala.annotation.implicitNotFound
+import java.net.{URI ⇒ Uri}
 
-trait Known extends Any {
+object Known {
 
   type Known[a] =
     a
@@ -10,7 +11,7 @@ trait Known extends Any {
 
 }
 
-trait interpretation extends Any {
+object interpretation {
 
   trait Interpretation[T] {
     type In[_]
@@ -30,8 +31,8 @@ trait interpretation extends Any {
 
 }
 
-trait disjunction extends Any {
-  this: Known ⇒
+object disjunction {
+  import Known._
 
   abstract class ||[a, b] {
     type Out <: a | b
@@ -54,8 +55,8 @@ trait disjunction extends Any {
 
 }
 
-trait conjunction extends Any {
-  this: Known ⇒
+object conjunction {
+  import Known._
 
   abstract case class &&[a, b]()(
     implicit
@@ -114,15 +115,11 @@ object stdinterp {
     final implicit val String: Name[String] = "String"
   }
 
-}
-
-trait stdinterp extends Any {
-  this: Any
-    with Known
-    with interpretation
-    with disjunction
-  ⇒
-  import stdinterp._
+  import
+    Known._,
+    interpretation._,
+    disjunction._,
+    stdinterp._
 
   final case class StdInterpretation[T: Name]() extends Interpretation[T] {
     type In[a] = a <:< T
@@ -144,17 +141,13 @@ trait stdinterp extends Any {
 
 }
 
-trait orinterp extends Any {
-  this: Any
-    with Known
-    with interpretation
-    with stdinterp
-    with disjunction
-    with conjunction
-  ⇒
-
-  implicit case object True
-  type True = True.type
+object orinterp {
+  import
+    Known._,
+    interpretation._,
+    stdinterp._,
+    disjunction._,
+    conjunction._
 
   final case class OrInterpretation[
     ca, cb,
@@ -194,27 +187,33 @@ trait orinterp extends Any {
 
 }
 
-trait istype extends Any {
-  this: Any
-    with interpretation
-    with Known
-  ⇒
+object istype {
+  import
+    interpretation._,
+    Known._
 
   @implicitNotFound("Cannot prove ${A} <<: ${B}")
   final case class IsType[A, B](
     a2b: A ⇒ B
   ) extends Interpretation[IsType[A, B]] {
+
     @inline val evidence: IsType[A, B] = this
+
     type In[a] = a <:< A
+
     type Out = B
+
     @inline def apply[a](a: a)(implicit a2a: a <:< A): B = a2b(a2a(a))
+
   }
 
   type <<:[a, b] = a `IsType` b
 
   object IsType {
+
     @inline implicit def isType[a, b](implicit ev: a =:= b): IsType[a, b] =
       IsType(ev)
+
   }
 
 }
@@ -251,18 +250,83 @@ object list {
 
 }
 
-trait alles extends Any
-  with Known
-  with interpretation
-  with stdinterp
-  with disjunction
-  with conjunction
-  with incubate
-  with probe
-  with orinterp
-  with istype
+object Pig extends AnyRef
+{
+  import
+    list._,
+    istype._,
+    Known._,
+    interpretation._
 
-object incu {
+  final implicit class pig[t](@inline override val toString: String) extends AnyVal
+
+  trait VeryLowPriorityPig {
+    implicit val any: pig[Any] = " PIG XXX "
+  }
+
+  object pig extends VeryLowPriorityPig {
+    implicit val int: pig[Int] = "Int"
+    implicit val string: pig[String] = "String"
+    implicit val uri: pig[Uri] = "Uri"
+    implicit val unit: pig[Unit] = "Unit"
+    implicit val nil: pig[Nil] = "Nil"
+
+    def apply[t: pig]: pig[t] = implicitly
+
+    implicit def list[h: pig, t <: List: pig]: pig[h :: t] = s"${pig[h]} :: ${pig[t]}"
+    implicit def istype[a: pig, b: pig]: pig[IsType[a, b]] = s"${pig[a]} <<: ${pig[b]}"
+
+  }
+
+}
+
+object typeops extends Any {
+  import list._
+
+  trait tmap[f[_], list <: List] { type Out <: List }
+
+  object tmap {
+
+    type fullT[f[_], list <: List, out <: List] = tmap[f, list] {
+      type Out = out
+    }
+
+    private[this] final case object instance extends tmap[Tuple1, Nil]
+
+    @inline def apply[f[_], list <: List, out <: List](): fullT[f, list, out] =
+      instance.asInstanceOf[fullT[f, list, out]]
+
+    @inline implicit def nil[f[_]]: fullT[f, Nil, Nil] =
+      tmap()
+
+    @inline implicit def list[f[_], h, t <: List](implicit t: tmap[f, t]): fullT[f, h :: t, f[h] :: t.Out] =
+      tmap()
+
+  }
+
+  trait tfold[f[_, _], list <: List] { type Out }
+
+  object tfold {
+
+    type fullT[f[_, _], list <: List, out] = tfold[f, list] {
+      type Out = out
+    }
+
+    private[this] object instance extends tfold[Tuple2, Nil]
+
+    @inline def apply[f[_, _], list <: List, out <: f[_, _]](): fullT[f, list, out] =
+      instance.asInstanceOf[fullT[f, list, out]]
+
+    @inline implicit def list2[f[_, _], a, b]: fullT[f, a :: b :: Nil, f[a, b]] =
+      tfold[f, a :: b :: Nil, f[a, b]]()
+
+    @inline implicit def list[f[_, _], h, t <: List](implicit tf: tfold[f, t]): fullT[f, h :: t, f[h, tf.Out]] =
+      tfold[f, h :: t, f[h, tf.Out]]()
+
+  }
+}
+
+object incubate {
 
   final implicit class Tappin[a](val self: a) extends AnyVal {
     def tap[b](f: a ⇒ b): b = f(self)
@@ -271,43 +335,48 @@ object incu {
       f(self);
       self
     }
+
+    def sp: a = this stap println
   }
 
-}
-import incu._
-
-trait incubate extends Any
-trait probe extends Any
-
-object Main extends alles
-{
   import
-    stdinterp._,
-    list._
-
-  @inline implicit def ist21[t, a, b](implicit ev: a <<: t): (a, b) <<: t = IsType { t ⇒ ev(t._1) }
+    istype._,
+    Known._,
+    interpretation._
 
   final case class get[in](in: in) {
     def f[t](implicit ev: in <<: t): t = ev(in)
   }
+
   trait Typ[t]
-  import java.net.{ URI ⇒ Uri }
+
   def uri(s: String): Uri = Uri create s
-  final implicit case object TInt     extends Typ { type Out = Int }
-  final implicit case object TString  extends Typ { type Out = String }
-  final implicit case object TUri     extends Typ { type Out = Uri }
+
+  final implicit case object TInt extends Typ[Int]
+
+  final implicit case object TString extends Typ[String]
+
+  final implicit case object TUri extends Typ[Uri]
+}
+
+object probe
+
+object Main {
+  import
+    istype._,
+    list._,
+    typeops._,
+    Known._,
+    Pig._,
+    incubate._
 
   def main(args: Array[String]): Unit = {
     println("Hello world!")
     println(msg)
-    val t = (18, "Fuck off", uri("http://www.fuckoff.com"))
-    t stap println
-    known[IsType[Int, Int]]
-    known[IsType[(Int, Uri), Int]]
-    println { "Hello" :: 14 :: "Mparmpa" :: Nil }
-    val l: Int :: Nil = 12 :: Nil
-    def poo(l: Int :: Nil): Int = l.head
-    poo(12 :: Nil) stap println
+    type isint[t] = IsType[t, Int]
+    type l0 = String :: Uri :: Int :: Unit :: Nil
+    val lm = known[tmap[isint, l0]]
+    pig[lm.Out].sp
   }
 
   def msg = "I was compiled by dotty :)"
