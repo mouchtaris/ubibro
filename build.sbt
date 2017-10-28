@@ -12,9 +12,5 @@ lazy val root = (project in file(".")).
     scalaVersion := dottyVersion,
 
     // To cross compile with Dotty and Scala 2
-    crossScalaVersions := Seq(dottyVersion, scala212Version),
-
-    scalacOptions := Seq(
-      "-Xprint-types"
-    )
+    crossScalaVersions := Seq(dottyVersion, scala212Version)
   )

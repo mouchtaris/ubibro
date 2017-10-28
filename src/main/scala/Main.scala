@@ -1,6 +1,6 @@
 import scala.annotation.implicitNotFound
 
-trait Known {
+trait Known extends Any {
 
   type Known[a] =
     a
@@ -10,7 +10,7 @@ trait Known {
 
 }
 
-trait interpretation {
+trait interpretation extends Any {
 
   trait Interpretation[T] {
     type In[_]
@@ -30,7 +30,7 @@ trait interpretation {
 
 }
 
-trait disjunction {
+trait disjunction extends Any {
   this: Known ⇒
 
   abstract class ||[a, b] {
@@ -54,7 +54,7 @@ trait disjunction {
 
 }
 
-trait conjunction {
+trait conjunction extends Any {
   this: Known ⇒
 
   abstract case class &&[a, b]()(
@@ -116,7 +116,7 @@ object stdinterp {
 
 }
 
-trait stdinterp {
+trait stdinterp extends Any {
   this: Any
     with Known
     with interpretation
@@ -144,7 +144,7 @@ trait stdinterp {
 
 }
 
-trait orinterp {
+trait orinterp extends Any {
   this: Any
     with Known
     with interpretation
@@ -194,7 +194,7 @@ trait orinterp {
 
 }
 
-trait istype {
+trait istype extends Any {
   this: Any
     with interpretation
     with Known
@@ -219,15 +219,48 @@ trait istype {
 
 }
 
-trait incubate {
-  this: Any
-    with Known
-    with interpretation
-    with stdinterp
-    with disjunction
-    with conjunction
-  ⇒
+object list {
+
+  type List = _ :: _
+
+  trait ::[head, tail <: List] extends Any {
+    val head: head
+    val tail: tail
+  }
+
+  private[list] final case class Cons[head, tail <: List](
+    head: head,
+    tail: tail
+  ) extends (head :: tail) {
+
+    @inline override lazy val toString: String =
+      s"$head :: $tail"
+
+  }
+
+  sealed trait Nil extends (Nil :: Nil)
+
+  final implicit case object Nil extends Nil {
+    val head: Nil = this
+    val tail: Nil = this
+  }
+
+  final implicit class ListOps[l <: List](val self: l) extends AnyVal {
+    def ::[a](a: a): a :: l = Cons(a, self)
+  }
+
 }
+
+trait alles extends Any
+  with Known
+  with interpretation
+  with stdinterp
+  with disjunction
+  with conjunction
+  with incubate
+  with probe
+  with orinterp
+  with istype
 
 object incu {
 
@@ -241,31 +274,18 @@ object incu {
   }
 
 }
+import incu._
 
-trait probe
+trait incubate extends Any
+trait probe extends Any
 
-object Main extends AnyRef
-  with Known
-  with interpretation
-  with stdinterp
-  with disjunction
-  with conjunction
-  with incubate
-  with probe
-  with orinterp
-  with istype
+object Main extends alles
 {
-  import incu._
-  import stdinterp._
+  import
+    stdinterp._,
+    list._
 
-  trait ist[B] { type t[a] = IsType[a, B] }
-  implicit def ist31[a, b, c, d](implicit is: ist[a]#t[b]): (b, c, d) <<: a =
-    IsType(t ⇒ is(t._1))
-  implicit def ist32[a, b, c, d](implicit is: ist[a]#t[c]): (b, c, d) <<: a =
-    IsType(t ⇒ is(t._2))
-  implicit def ist33[a, b, c, d](implicit is: ist[a]#t[d]): (b, c, d) <<: a =
-    IsType(t ⇒ is(t._3))
-
+  @inline implicit def ist21[t, a, b](implicit ev: a <<: t): (a, b) <<: t = IsType { t ⇒ ev(t._1) }
 
   final case class get[in](in: in) {
     def f[t](implicit ev: in <<: t): t = ev(in)
@@ -282,7 +302,12 @@ object Main extends AnyRef
     println(msg)
     val t = (18, "Fuck off", uri("http://www.fuckoff.com"))
     t stap println
-    println { get(t).f[Int](ist31[Int, Int, String, Uri](IsType.isType[Int, Int])) }
+    known[IsType[Int, Int]]
+    known[IsType[(Int, Uri), Int]]
+    println { "Hello" :: 14 :: "Mparmpa" :: Nil }
+    val l: Int :: Nil = 12 :: Nil
+    def poo(l: Int :: Nil): Int = l.head
+    poo(12 :: Nil) stap println
   }
 
   def msg = "I was compiled by dotty :)"
