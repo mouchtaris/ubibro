@@ -31,8 +31,8 @@ object IsType {
     * @tparam a type to check equality against
     * @tparam b type to check its equality against a
     */
-  type is[a] = {
-    type t[b] = IsType[a, b]
+  type is[b] = {
+    type t[a] = IsType[a, b]
   }
 
   /**

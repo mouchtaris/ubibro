@@ -1,39 +1,31 @@
 package incubator
 
-import java.net.URI
+import
+  java.net.URI,
+  fun.typelevel._,
+  fun.list._,
+  fun.interpretation._
 
 object sample {
 
-  //
-  // Input restriction
-  //
-  trait Clue[t]
+  final case class IsTypeI[Ta, Tb](
+    is: IsType[Ta, Tb],
+  ) extends Interpretation[IsType[Ta, Tb]] {
 
-  //
-  // Sample inputs
-  //
-  case object OA
-  type OA = OA.type
-  case object OB
-  type OB = OB.type
+    type In[a] = a =:= Ta
 
-  //
-  // Restriction satisfied
-  //
-  implicit case object CA extends Clue[OA]
-  implicit case object CB extends Clue[OB]
+    type Out = Tb
 
-  //
-  // Interpreters
-  //
-  implicit case object IA extends Interpretation[OA] {
-    type In[a] = Clue[a]
-    type Out = String
-    def apply[a: In](a: a): Out = "fuck off harry"
+    @inline def apply[a: In](a: a): Out =
+      is.evidence(a)
+
   }
-  implicit case object IB extends Interpretation[OB] {
-    type In[a] = Clue[a]
-    type Out = URI
-    def apply[a: In](a: a): Out = URI create "https://www.com.com"
-  }
+
+  implicit def isTypeI[a, b](
+    implicit
+    is: IsType[a, b]
+  ): Main.I.fullT[IsType[a, b], IsTypeI[a, b]#In, b] =
+    IsTypeI(is)
+
+
 }
