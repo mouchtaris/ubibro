@@ -193,52 +193,6 @@ import scala.annotation.implicitNotFound
 //
 //
 //
-//object typeops extends Any {
-//  import list._
-//
-//  trait tmap[f[_], list <: List] { type Out <: List }
-//
-//  object tmap {
-//
-//    type fullT[f[_], list <: List, out <: List] = tmap[f, list] {
-//      type Out = out
-//    }
-//
-//    private[this] final case object instance extends tmap[Tuple1, Nil]
-//
-//    @inline def apply[f[_], list <: List, out <: List](): fullT[f, list, out] =
-//      instance.asInstanceOf[fullT[f, list, out]]
-//
-//    @inline implicit def nil[f[_]]: fullT[f, Nil, Nil] =
-//      tmap()
-//
-//    @inline implicit def list[f[_], h, t <: List](implicit t: tmap[f, t]): fullT[f, h :: t, f[h] :: t.Out] =
-//      tmap()
-//
-//  }
-//
-//  trait tfold[f[_, _], list <: List] { type Out }
-//
-//  object tfold {
-//
-//    type fullT[f[_, _], list <: List, out] = tfold[f, list] {
-//      type Out = out
-//    }
-//
-//    private[this] object instance extends tfold[Tuple2, Nil]
-//
-//    @inline def apply[f[_, _], list <: List, out <: f[_, _]](): fullT[f, list, out] =
-//      instance.asInstanceOf[fullT[f, list, out]]
-//
-//    @inline implicit def list2[f[_, _], a, b]: fullT[f, a :: b :: Nil, f[a, b]] =
-//      tfold[f, a :: b :: Nil, f[a, b]]()
-//
-//    @inline implicit def list[f[_, _], h, t <: List](implicit tf: tfold[f, t]): fullT[f, h :: t, f[h, tf.Out]] =
-//      tfold[f, h :: t, f[h, tf.Out]]()
-//
-//  }
-//}
-//
 //object incubate {
 //
 //  final implicit class Tappin[a](val self: a) extends AnyVal {
