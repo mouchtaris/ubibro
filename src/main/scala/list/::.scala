@@ -6,22 +6,15 @@ trait ::[head, tail <: List] extends Any {
 
   val tail: tail
 
+  @inline final override lazy val toString: String =
+    s"$head :: $tail"
+
 }
 
 object :: {
 
-  private[this] final case class ::[head, tail <: List](
-    head: head,
-    tail: tail
-  ) extends list.::[head, tail] {
-
-    @inline override lazy val toString: String =
-      s"$head :: $tail"
-
-  }
-
   @inline def apply[head, tail <: List](head: head, tail: tail): list.::[head, tail] =
-    ::(head, tail)
+    Cons(head, tail)
 
 }
 
