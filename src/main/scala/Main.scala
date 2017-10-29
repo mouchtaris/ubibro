@@ -1,5 +1,4 @@
 import scala.annotation.implicitNotFound
-import java.net.{URI ⇒ Uri}
 
 
 //
@@ -193,36 +192,6 @@ import java.net.{URI ⇒ Uri}
 //}
 //
 //
-//object Pig extends AnyRef
-//{
-//  import
-//    list._,
-//    istype._,
-//    Known._,
-//    interpretation._,
-//    disjunction._
-//
-//  final implicit class pig[t](@inline override val toString: String) extends AnyVal
-//
-//  trait VeryLowPriorityPig {
-//    implicit val any: pig[Any] = " PIG XXX "
-//  }
-//
-//  object pig extends VeryLowPriorityPig {
-//    implicit val int: pig[Int] = "Int"
-//    implicit val string: pig[String] = "String"
-//    implicit val uri: pig[Uri] = "Uri"
-//    implicit val unit: pig[Unit] = "Unit"
-//    implicit val nil: pig[Nil] = "Nil"
-//
-//    def apply[t: pig]: pig[t] = implicitly
-//
-//    implicit def list[h: pig, t <: List: pig]: pig[h :: t] = s"${pig[h]} :: ${pig[t]}"
-//    implicit def istype[a: pig, b: pig]: pig[IsType[a, b]] = s"${pig[a]} <<: ${pig[b]}"
-//    implicit def disjunction[a: pig, b: pig]: pig[a || b] = s"${pig[a]} || ${pig[b]}"
-//  }
-//
-//}
 //
 //object typeops extends Any {
 //  import list._

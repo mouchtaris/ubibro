@@ -4,7 +4,7 @@ trait ListOps[l <: List] extends Any {
 
   def self: l
 
-  def ::[a](a: a): a :: l = list.::(a, self)
+  @inline final def ::[a](a: a): a :: l = list.::(a, self)
 
 }
 

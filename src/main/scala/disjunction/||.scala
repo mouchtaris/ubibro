@@ -16,9 +16,9 @@ object || {
     type Out = out
   }
 
-  implicit def orA[a, b](implicit a: a): ||[a, b, a] = ||(a)
+  @inline implicit def orA[a, b](implicit a: a): ||[a, b, a] = ||(a)
 
-  implicit def orB[a, b](implicit b: b): ||[a, b, b] = ||(b)
+  @inline implicit def orB[a, b](implicit b: b): ||[a, b, b] = ||(b)
 
 }
 

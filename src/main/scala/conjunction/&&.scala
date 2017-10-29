@@ -11,7 +11,7 @@ final case class &&[a, b]()(
 
 object && {
 
-  implicit def and[a: Known, b: Known]: a && b =
+  @inline implicit def and[a: Known, b: Known]: a && b =
     &&()
 
 }
