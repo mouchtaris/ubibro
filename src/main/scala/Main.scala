@@ -29,27 +29,6 @@ import scala.annotation.implicitNotFound
 //
 //}
 //
-//object t {
-//
-//  sealed trait Gen { type t[T] <: T }
-//
-//  sealed trait Out[out] extends Gen {
-//    final type t[T] = T { type Out = out }
-//  }
-//
-//  sealed trait In[in] extends Gen {
-//    final type t[T] = T { type In = in }
-//  }
-//
-//  sealed trait In1[in[_]] extends Gen {
-//    final type t[T] = T { type In[a] = in[a] }
-//  }
-//
-//  sealed trait Compose[A[T] <: T, B[T] <: T] extends Gen {
-//    final type t[T] = A[B[T]]
-//  }
-//
-//}
 //
 //object stdinterp {
 //
