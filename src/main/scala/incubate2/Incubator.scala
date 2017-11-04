@@ -1,6 +1,6 @@
 package incubate2 
 
-import scala.annotation.tailrec
+import Pig._
 
 object pkg {
   type Known[T] = T
@@ -44,28 +44,72 @@ object pkg {
     }
   }
 
-  trait TypeAliasT[t] extends Any { final type T = t }
-  trait TypeAliasArgs1[args1] extends Any { final type Args1 = args1 }
-  trait TypeAliasArgs2[args2] extends Any { final type Args2 = args2 }
+  trait ListConcat[a <: List, b <: List] {
+    type Out <: List
+  }
+  case object ListConcat {
+    final case class create[a <: List, b <: List, out <: List]()
+      extends ListConcat[a, b]
+    {
+      final type Out = out
+    }
 
-  trait ArgumentEncoding {
-    trait Arguments
-    type Argument0 <: Arguments
-    type Argument1[T] <: Arguments with TypeAliasT[T] 
-    type ArgumentsCombination[args1 <: Arguments, args2 <: Arguments] <: Arguments with TypeAliasArgs1[args1] with TypeAliasArgs2[args2]
+    implicit def nilcat[b <: List]: create[Nil, b, b] = create()
+
+    implicit def htcat[h, t <: List, b <: List](
+      implicit
+      tbcat: ListConcat[t, b]
+    ): create[h :: t, b, h :: tbcat.Out] = create()
+
+    // weirdoes
+    implicit def hcat[h, b <: List]: create[h :: List, b, h :: b] = create()
   }
 
-  trait ListArguments { type Encoding <: List }
-  trait ListArgument0 extends ListArguments { final type Encoding = Nil }
-  trait ListArgument1[T] extends ListArguments with TypeAliasT[T] { final type Encoding = T :: List }
-  trait ListArgumentsCombination[args1 <: ListArguments, args2 <: ListArguments] extends ListArguments with TypeAliasArgs1[args1] with TypeAliasArgs2[args2] {
-    type Encoding <: List
-    val args1: args1
-  }
-  object ListArgumentsCombination {
-    def apply(args1_ : ListArguments, args2_ : ListArguments) = new ListArgumentsCombination[args1_.type, args2_.type] { val args1 = args1_ }
+
+  trait Arguments extends Any
+  trait Argument[T] extends Any with Arguments
+  trait NoArgument extends Any with Arguments
+  trait CombinedArguments[arg1 <: Arguments, arg2 <: Arguments] extends Any with Arguments
+
+  trait ListEncoding[args <: Arguments] { type Encoding <: List }
+  object ListEncoding {
+    final abstract class encodingOf[args <: Arguments] {
+      final type t[enc <: List] = ListEncoding[args] {
+        type Encoding = enc
+      }
+    }
+
+    final case class create[args <: Arguments, enc <: List]()
+      extends ListEncoding[args]
+    {
+      final type Encoding = enc
+    }
+
+    implicit def argument[T]: create[Argument[T], T :: List] =
+      create()
+
+    implicit def combined[
+      arg1 <: Arguments,
+      arg2 <: Arguments,
+      enc1 <: List: ListEncoding.encodingOf[arg1]#t,
+      enc2 <: List: ListEncoding.encodingOf[arg2]#t
+    ](
+      implicit
+      cat: ListConcat[enc1, enc2]
+    ): create[CombinedArguments[arg1, arg2], cat.Out] =
+      create()
   }
 
+//  trait ArgumentsHandler[in]
+//  trait ArgumentHandler[arg <: Argument, in] extends ArgumentsHandler[in] {
+//    val arg: arg
+//    def apply(in: in): arg.T
+//  }
+//  trait CombinedArgumentsHandler[arg <: CombinedArguments, in] extends ArgumentsHandler[in] {
+//    val arg: arg
+//    def a(in: in): arg.Arg1
+//  }
+//
 }
 
 
@@ -92,11 +136,27 @@ object Tests extends TestLow {
     import ind._
     def apply(): Unit = { println("*** Tessting " + name.toString); block(ind.next) }
   }
+  def test_concat = test(ListConcat) { implicit ind =>
+    import ind._
+    val cat = known[ ListConcat[ Int :: String :: Nil, Float :: Double :: Nil ] ]
+    println(cat)
+    println { pig[cat.Out] }
+  }
   def test_listargscombenc1 = test("listargcombenc1") { implicit ind =>
     import ind._
-    val args1 = new ListArgument1[Int] { }
-    val args2 = new ListArgument1[String] { }
-    val args = ListArgumentsCombination(args1, args2)
+    val enc = known[ ListEncoding[ CombinedArguments[ Argument[Int], Argument[String] ] ] ]
+    println(enc)
+    println { pig[enc.Encoding] }
+  }
+  def test_pigs = test("PIGS") { implicit ind =>
+    import ind._
+    println(Seq(
+      known[pig[Int]],
+      known[pig[String]],
+      known[pig[Nil]],
+      known[pig[Int :: Nil]],
+      known[pig[Int :: String :: Float :: Double :: Unit :: Nil]]
+    ))
   }
   def test_&& = test(&&) { implicit ind ⇒
     import ind._
@@ -115,7 +175,9 @@ object Tests extends TestLow {
     Vector(
       test_&&,
       test_list,
-      test_listargscombenc1
+      test_concat,
+      test_listargscombenc1,
+      test_pigs
     )
 
 }
