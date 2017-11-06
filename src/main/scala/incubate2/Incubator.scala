@@ -1,49 +1,13 @@
 package incubate2 
 
-import Pig._
+import Known._
+import Conj._
+import list._
 
-object pkg {
-  type Known[T] = T
-  def known[t <: AnyRef](implicit t: t): t.type = t
-  trait &&[A, B] {
-    val a: A
-    val b: B
-  }
-  case object && {
-    final case class &&[A, B]()(
-      implicit
-      val a: A,
-      val b: B
-    ) extends pkg.&&[A, B]
-    implicit def `⇒ a && b`[a: Known, b: Known]: a && b = &&()
-  }
-
-  type List = _ :: _
-  sealed trait ::[h, t <: List] extends Any {
-    def head: h
-    def tail: t
-    final override def toString: String = appendTo(new StringBuilder).toString
-    def appendTo(sb: StringBuilder): sb.type
-  }
-  case object :: {
-    final case class ::[h, t <: List](head: h, tail: t) extends pkg.::[h, t] {
-      def appendTo(sb: StringBuilder): sb.type = {
-        sb append head append " :: "
-        tail appendTo sb
-      }
-    }
-    def apply[h, t <: List](h: h, t: t): h :: t = ::(h, t)
-  }
-  sealed trait Nil extends (Nil :: Nil)
-  final case object Nil extends Nil {
-    val head = this
-    def tail = this
-    def appendTo(sb: StringBuilder): sb.type = {
-      sb append "Nil"
-      sb
-    }
-  }
-
+object pkg extends AnyRef
+  with pig.PigContext
+  with list_pigs.ListPigs
+{
   trait ListConcat[a <: List, b <: List] {
     type Out <: List
   }
@@ -168,7 +132,7 @@ object Tests extends TestLow {
 
   def test_list = test(::) { implicit ind ⇒
     import ind._
-    println { ::(12, ::("Hello", Nil)) }
+    println { Cons(12, Cons("Hello", Nil)) }
   }
 
   def apply(): Vector[test] =
