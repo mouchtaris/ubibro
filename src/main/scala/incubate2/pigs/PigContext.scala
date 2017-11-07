@@ -1,32 +1,31 @@
 package incubate2
-package pig
+package pigs
 
-trait PigDefinitions {
-  final class pig[t](
-    override val toString: String
-  )
+trait PigTypes {
+  this: Any
+  =>
+
+  type pig[t] = pigs.pig[t]
+
 }
 
 trait PigConstructors {
   this: Any
-    with PigDefinitions
   =>
 
-  @`inline` final implicit def fromString[t](v: String): pig[t] =
+  final implicit def fromString[t](v: String): pig[t] =
     new pig[t](v)
 }
 
 trait PigAccessors {
   this: Any
-    with PigDefinitions
   =>
 
-  @`inline` final def pig[t: pig]: pig[t] = implicitly
+  final def pig[t: pig]: pig[t] = implicitly
 }
 
 trait PigUnknown {
   this: Any
-    with PigDefinitions
     with PigConstructors
   =>
 
@@ -36,7 +35,6 @@ trait PigUnknown {
 
 trait StandardPigs {
   this: Any
-    with PigDefinitions
     with PigConstructors
   =>
 
@@ -48,7 +46,7 @@ trait StandardPigs {
 }
 
 trait PigContext extends AnyRef
-  with PigDefinitions
+  with PigTypes
   with PigConstructors
   with PigAccessors
   with PigUnknown

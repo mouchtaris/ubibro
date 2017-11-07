@@ -7,12 +7,12 @@ import
 
 trait ListPigs {
   this: Any
-    with pig.PigContext
+    with pigs.PigContext
   =>
 
-  @`inline` final implicit val nil: pig[Nil] = "Nil"
-  @`inline` final implicit def htlist[h: pig, t <: List: pig]: pig[h :: t] =
+  final implicit val nil: pig[Nil] = "Nil"
+  final implicit def htlist[h: pig, t <: List: pig]: pig[h :: t] =
     s"${pig[h]} :: ${pig[t]}"
-  @`inline` final implicit def list: pig[List] = "List"
-}
+  final implicit def list: pig[List] = "List"
 
+}

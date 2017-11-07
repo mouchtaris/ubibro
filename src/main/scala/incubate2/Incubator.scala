@@ -4,9 +4,13 @@ import Known._
 import Conj._
 import list._
 
-object pkg extends AnyRef
-  with pig.PigContext
+object pigcontext extends
+  pigs.PigContext
   with list_pigs.ListPigs
+
+import pigcontext._
+
+object pkg extends AnyRef
 {
   trait ListConcat[a <: List, b <: List] {
     type Out <: List
@@ -115,11 +119,11 @@ object Tests extends TestLow {
   def test_pigs = test("PIGS") { implicit ind =>
     import ind._
     println(Seq(
-      known[pig[Int]],
-      known[pig[String]],
-      known[pig[Nil]],
-      known[pig[Int :: Nil]],
-      known[pig[Int :: String :: Float :: Double :: Unit :: Nil]]
+      pig[Int],
+      pig[String],
+      pig[Nil],
+      pig[Int :: Nil],
+      pig[Int :: String :: Float :: Double :: Unit :: Nil]
     ))
   }
   def test_&& = test(&&) { implicit ind ⇒
