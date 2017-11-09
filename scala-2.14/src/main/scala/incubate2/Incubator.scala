@@ -3,8 +3,7 @@ package incubate2
 import
   Known._,
   Conj._,
-  list._,
-  types._
+  list._
 
 object pkg extends AnyRef
 {
@@ -71,57 +70,74 @@ object pkg extends AnyRef
     def <<[C](f: C ⇒ A): C ⇒ B = f andThen self
   }
 
-  trait ListHandling {
+  object ListHandling {
 
-    trait ListArgumentsHandler extends AnyRef
+    trait ListArgumentsHandler[rest <: List] extends AnyRef
     {
-      type Remainder <: List
+      this: pkg.ArgumentsHandler[_, _] ⇒
+
+      final type Remainder = rest
+      val consume: In ⇒ Remainder
     }
 
-    final case class ArgumentHandler[
+    case class ArgumentsHandler[args <: Arguments, rest <: List, in <: List](
+      consume: in ⇒ rest
+    ) extends AnyRef
+      with ListArgumentsHandler[rest]
+      with pkg.ArgumentsHandler[args, in]
+
+    case class ArgumentHandler[
       T[_],
       a: T,
       rest <: List,
       in <: List
     ](
-      in2a: in ⇒ a
+      in2a: in ⇒ a,
+      consume: in ⇒ rest
     ) extends AnyRef
-      with ListArgumentsHandler
+      with ListArgumentsHandler[rest]
       with pkg.ArgumentHandler[T, in]
     {
       type A = a
-      type Remainder = rest
       val evidence: T[A] = implicitly
     }
 
-    final case class CombinedArgumentsHandler[
+    case class CombinedArgumentsHandler[
       args1 <: Arguments,
-      han1 <: ArgumentsHandler[args1, in],
+      han1 <: pkg.ArgumentsHandler[args1, in],
       args2 <: Arguments,
-      han2 <: ArgumentsHandler[args2, in],
+      han2 <: pkg.ArgumentsHandler[args2, in],
       rest <: List,
       in <: List
     ](
       handler1: han1,
-      handler2: han2
+      handler2: han2,
+      consume: in ⇒ rest
     ) extends AnyRef
-      with ListArgumentsHandler
+      with ListArgumentsHandler[rest]
       with pkg.CombinedArgumentsHandler[args1, han1, args2, han2, in]
-    {
-      type Remainder = rest
-    }
 
     implicit def listArgumentHandler[T[_], h: T, t <: List]: ArgumentHandler[T, h, t, h :: t] =
-      ArgumentHandler(_.head)
+      ArgumentHandler(_.head, _.tail)
 
     implicit def listCombinedArgumentHandler[
       args1 <: Arguments,
       args2 <: Arguments,
+      rest1 <: List,
+      rest2 <: List,
       in <: List
     ](
-      implicit dummyImplicit: DummyImplicit
-    ): CombinedArgumentsHandler[args1, Nothing, args2, Nothing, Nothing, in] =
-      ???
+      implicit dummyImplicit: DummyImplicit,
+      han1: pkg.ArgumentsHandler[args1, in] with ListArgumentsHandler[rest1],
+      han2: pkg.ArgumentsHandler[args2, rest1] with ListArgumentsHandler[rest2]
+    ): CombinedArgumentsHandler[args1, han1.type, args2, ArgumentsHandler[args2, rest2, in], rest2, in] = {
+      val superconsumer: in ⇒ rest2 = han1.consume andThen han2.consume
+      CombinedArgumentsHandler(
+        han1,
+        ArgumentsHandler(superconsumer),
+        superconsumer
+      )
+    }
 
   }
 
@@ -132,9 +148,7 @@ object pkg extends AnyRef
     implicit val plue: Plue[Ibo] = Plue()
   }
   final type Ibo = Ibo.type
-  import Ibo._
-  object handling extends ListHandling
-  import handling._
+  import ListHandling._
   trait AH[in] {
     type A <: Arguments
     final type H = ArgumentsHandler[A, in]
@@ -160,26 +174,17 @@ object pkg extends AnyRef
 object Incubator {
 
   def main(args: Array[String]): Unit = {
-    println("Incubating 2 ....")
-    import pkg._
+    Console.println("Incubating 2 ....")
+    import scala.reflect.runtime.universe._
+    Console.println { typeOf[pkg.han12.handler1.Remainder].dealias }
 //    println { han1 in2a In }
 //    Tests().foreach(_())
   }
 }
 
 trait Ind {
-  trait richn {
-    def to(n: Int): Vector[Int]
-  }
-  implicit def torichn(self: Int): richn = new richn {
-    def to(n: Int): Vector[Int] = 
-      if (self < n)
-        self +: self.+(1).to(n)
-      else
-        Vector.empty
-  }
   final case class ind(n: Int) {
-    val indent: String = 1 to (n + 1) map (_ ⇒ "  ") mkString
+    val indent: String = Range inclusive (1, n + 1) map (_ ⇒ "  ") mkString
     def println(o: Any): Unit = { Console.println(indent + o.toString) }
     def next = ind(n + 1)
   }
@@ -199,7 +204,6 @@ object Tests extends TestLow {
     println(cat)
   }
   def test_listargscombenc1 = test("listargcombenc1") { implicit ind =>
-    import ind._
   }
   def test_&& = test(&&) { implicit ind ⇒
     import ind._
@@ -209,7 +213,7 @@ object Tests extends TestLow {
     println { known[A && B] }
   }
 
-  def test_list = test(::) { implicit ind ⇒
+  def test_list = test("::") { implicit ind ⇒
     import ind._
     println { Cons(12, Cons("Hello", Nil)) }
   }

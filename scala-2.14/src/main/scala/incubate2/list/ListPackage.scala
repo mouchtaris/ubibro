@@ -17,8 +17,6 @@ trait ListPackage {
 
   }
 
-  final case object ::
-
   final case class Cons[h, t <: List](
     head: h,
     tail: t

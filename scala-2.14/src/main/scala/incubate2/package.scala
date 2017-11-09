@@ -13,6 +13,7 @@ package object incubate2 {
   val Vector = scala.Vector
   val StringContext = scala.StringContext
   type StringBuilder = scala.StringBuilder
+  val Range = scala.Range
 
   import scala.{ Predef => p }
   type String = p.String
@@ -24,5 +25,4 @@ package object incubate2 {
   def ??? = p.???
 
   val Console = scala.Console
-  def println(any: Any) = p.println(any)
 }
