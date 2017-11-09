@@ -13,7 +13,7 @@ object Conj {
 
   case object && {
 
-    @`inline` implicit def `⇒ a && b`[a: Known, b: Known]: a && b =
+    implicit def `⇒ a && b`[a: Known, b: Known]: a && b =
       new &&[a, b] {
         val a: a = implicitly[a]
         val b: b = implicitly[b]

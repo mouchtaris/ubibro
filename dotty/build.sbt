@@ -7,5 +7,15 @@ lazy val root = (project in file(".")).
 
     scalaVersion := dottyVersion,
 
-    libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test"
+    libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test",
+
+    scalacOptions ++= Seq(
+      "-explain",
+      "-explain-implicits",
+      "-explain-types",
+      "-feature",
+      "-uniqid",
+      "-Xfatal-warnings",
+      "-Yno-imports"
+    )
   )

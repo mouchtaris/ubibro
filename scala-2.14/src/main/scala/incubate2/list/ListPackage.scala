@@ -5,7 +5,7 @@ trait ListPackage {
 
   final type List = _ :: _
 
-  sealed trait ::[h, t <: List] extends Any {
+  sealed trait ::[+h, +t <: List] extends Any {
 
     def head: h
 
@@ -16,6 +16,8 @@ trait ListPackage {
     def appendTo(sb: StringBuilder): sb.type
 
   }
+
+  final case object ::
 
   final case class Cons[h, t <: List](
     head: h,

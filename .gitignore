@@ -3,7 +3,7 @@
 /dotty/project/target
 /dotty/target
 /.idea/
-/scala-2.13/.idea/
-/scala-2.13/project/project
-/scala-2.13/project/target
-/scala-2.13/target
+/scala-2.14/.idea/
+/scala-2.14/project/project
+/scala-2.14/project/target
+/scala-2.14/target
