@@ -15,12 +15,8 @@ trait Api {
     def baseClasses: uList[Symbol]
     def baseType(s: Symbol): Type
     def typeArgs: uList[Type]
+    def isSingleType: Boolean
   }
-
-  trait SingleTypeMatch {
-    def unapply(tpe: Type): Option[(Type, Symbol)]
-  }
-  val SingleType: SingleTypeMatch
 
 }
 

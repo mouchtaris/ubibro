@@ -70,7 +70,7 @@ object ScalacOptions {
   val debug = scalacOptions ++= Seq(
 //    "-Xfatal-warnings",                  // Fail the compilation if there are any warnings.
 //    "-Xprint:typer",
-    "-Xlog-implicits"
+//    "-Xlog-implicits"
   )
 
   val typelevel = scalacOptions ++= Seq(

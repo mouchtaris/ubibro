@@ -4,64 +4,7 @@ import
   cross.lang._,
   list._,
   Console.{ println ⇒ cprintln },
-  cross.reflect.Api._,
-  incubate3.{ ind ⇒ pkg_ind }
-
-final case class ind(n: Int, sigil: String = "  ") {
-  val indent: String = Range inclusive (1, n + 1) map (_ ⇒ sigil) mkString
-  def println(o: Any): Unit = { Console.println(indent + o.toString) }
-  def next = copy(n = n + 1)
-  def withSigil(sig: String) = copy(sigil = sig)
-}
-
-object TypeInfo {
-
-  case object Alias {
-    def unapply(tt: Type): Boolean =
-      tt.dealias != tt
-  }
-
-  case object Baseable {
-    def unapply(tt: Type): Option[Seq[Type]] =
-      tt match {
-        case st @ SingleType(_, _) ⇒
-          Some {
-            st.baseClasses
-              .map { st.baseType }
-          }
-        case _ ⇒
-          None
-      }
-  }
-
-  def typeinfo(tt: Type)(
-    implicit
-    sb: StringBuilder = new StringBuilder,
-    ind: ind = pkg_ind(0),
-    mark: String = " |-|"
-  ): String = {
-    import ind._
-    sb ++= indent ++= mark ++= tt.toString ++= "\n"
-    //sb ++= tt.getClass.toString ++= "\n"
-    tt match {
-      case Alias() ⇒
-        typeinfo(tt.dealias)(sb, ind, " ~> ")
-      case Baseable(bases) ⇒
-        bases.foreach { base ⇒
-          typeinfo(base)(sb, ind, " => ")
-        }
-        sb.toString
-      case _ ⇒
-        tt.typeArgs.foreach { typeinfo(_)(sb, ind.next) }
-        sb.toString
-    }
-
-  }
-
-  def typeinfo[T](implicit tt: TypeTag[T]): String =
-    typeinfo(typeOf[T](tt))
-}
-import TypeInfo._
+  typeinfo._
 
 object hell0 {
 
@@ -97,6 +40,7 @@ object Incubator {
   def entry(args: Array[String]): Unit = {
     args.asInstanceOf[Unit]
     cprintln(typeinfo[X.t])
+    cprintln(typeinfo[Vector[(Unit, Int)]])
     cprintln(Nil)
   }
 

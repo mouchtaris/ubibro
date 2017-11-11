@@ -1,13 +1,16 @@
 package cross
 package reflect
 
-import scala.reflect.runtime.universe.{
-  Type ⇒ sType,
-  Symbol ⇒ sSymbol,
-  SingleType ⇒ sSingleType,
-  TypeTag ⇒ sTypeTag,
-  typeOf ⇒ stypeOf
-}
+import
+  scala.reflect.runtime.universe.{
+    Type ⇒ sType,
+    Symbol ⇒ sSymbol,
+    SingleTypeApi ⇒ sSingleTypeApi,
+    SingletonTypeApi ⇒ sSingletonTypeApi,
+    TypeApi ⇒ sTypeApi,
+    TypeTag ⇒ sTypeTag,
+    typeOf ⇒ stypeOf
+  }
 
 trait ApiImpl extends Api {
 
@@ -23,15 +26,12 @@ trait ApiImpl extends Api {
     def baseClasses: uList[Symbol] = self.baseClasses
     def baseType(s: Symbol): Type = self.baseType(s)
     def typeArgs: uList[Type] = self.typeArgs
+    def isSingleType: Boolean =
+      self.isInstanceOf[
+        sSingleTypeApi with
+        sSingletonTypeApi with
+        sTypeApi
+      ]
   }
 
-  final case object SingleType
-    extends SingleTypeMatch
-  {
-    def unapply(tpe: Type): Option[(Type, Symbol)] =
-      tpe match {
-        case sSingleType(pre, sym) ⇒ Some((pre, sym))
-        case _ ⇒ None
-      }
-  }
 }
