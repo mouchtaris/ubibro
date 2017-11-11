@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-path=src/main/scala/cross/reflect
+mydir="$( cd "$( dirname "$0" )" && pwd )"
+rootdir="$mydir"/..
+
+cross=scala-2.14/src/main/scala/cross/
+reflect="$cross"/reflect
+lang="$cross"/lang
 
 function showHelp () {
   printf 'Set cross.reflect.Api to *scala* or *dotty*.\n'
@@ -15,7 +20,9 @@ function death_by () {
 function setImplSafe () {
   impl="$1" && shift &&
     echo setting to "$impl" &&
-    ln -svf "$impl"ApiImpl.scala_ "$path"/ApiImpl.scala
+    ln -svf "$impl"ApiImpl.scala_ "$reflect"/ApiImpl.scala &&
+    ln -svf "$impl"Types.scala_ "$lang"/Types.scala &&
+    true
 }
 function setImpl () {
   impl="$1" && shift && setImplSafe "$impl" || death_by 'setImpl(

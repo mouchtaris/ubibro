@@ -24,7 +24,7 @@ object TypeInfo {
   case object Baseable {
     def unapply(tt: Type): Option[Seq[Type]] =
       tt match {
-        case st @ SingleType(pre, sym) ⇒
+        case st @ SingleType(_, _) ⇒
           Some {
             st.baseClasses
               .map { st.baseType }
