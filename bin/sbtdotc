@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+mydir="$( cd "$( dirname "$0" )" && pwd )"
+rootdir="$mydir"/..
+
+cd "$rootdir"/lib/dotty &&
+  sbt "run $@"

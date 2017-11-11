@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+mydir="$( cd "$( dirname "$0" )" && pwd )"
+rootdir="$mydir"/..
+bindir="$rootdir"/bin
+
+dotopts="$rootdir"/_dotopts
+srclist="$rootdir"/_srclist
+
+"$bindir"/mksrclist
+
+function mkdotopts () {
+  tee "$dotopts" <<EOS
+-d /mem/junk
+-sourcepath $rootdir/dotty/src
+-deprecation
+-explain
+-explain-types
+-explain-implicits
+-feature
+-strict
+-unchecked
+EOS
+  extra="$1"
+  shift
+  printf '%s' "$extra" | tee -a "$dotopts"
+}
+
+mkdotopts "$(< "$srclist")"
+bash -x "$(which sbtdotc)" @"$dotopts"

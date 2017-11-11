@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+mydir="$( cd "$( dirname "$0" )" && pwd )"
+rootdir="$mydir"/..
+
+scala \
+  -cp "$rootdir"/lib/dotty/target/scala-2.12/dotty-assembly-0.5.0-bin-SNAPSHOT-nonbootstrapped.jar \
+  dotty.tools.dotc.Main \
+  "$@"
