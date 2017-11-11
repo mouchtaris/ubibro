@@ -17,6 +17,9 @@ trait StdImports {
   type Vector[a] = scala.Vector[a]
   type Seq[a] = scala.Seq[a]
   type uList[a] = scala.List[a]
+  type Either[a, b] = scala.Either[a, b]
+  val Left = scala.Left
+  val Right = scala.Right
   val uList = scala.List
   val Console = scala.Console
   val Range = scala.Range
