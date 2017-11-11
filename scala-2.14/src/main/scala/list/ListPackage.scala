@@ -1,4 +1,3 @@
-package incubate3
 package list
 
 trait ListPackage {
