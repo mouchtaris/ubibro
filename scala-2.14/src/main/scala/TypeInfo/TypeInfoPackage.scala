@@ -1,4 +1,4 @@
-package typeinfo
+package TypeInfo
 
 import
   cross.reflect.Api._,

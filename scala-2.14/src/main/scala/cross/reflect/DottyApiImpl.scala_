@@ -7,31 +7,22 @@ trait ApiImpl extends Api {
   final type Yes = Yes.type
 
   final type TypeTag[_] = Yes
-  final case object Type
-  final type Type = Type.type
+  final case class Type()
 
-  def typeOf[T: TypeTag]: Type = Type
+  def typeOf[T: TypeTag]: Type = Type()
 
   trait TypeApiImpl extends Any
 
   trait SneakTypeApiImpl extends TypeApi {
     import uList.empty
-    final def dealias: Type = Type
-    final def baseClasses: uList[Symbol] = empty
-    final def baseType(s: Symbol): Type = Type
-    final def typeArgs: uList[Type] = empty
+    final def dealias: Type = Type()
+    final val baseClasses: uList[Symbol] = empty
+    final def baseType(s: Symbol): Type = Type()
+    final val typeArgs: uList[Type] = empty
+    final val isSingleType: Boolean = false
   }
 
   final implicit class SneakTypeApiDeco(val self: Type)
     extends AnyRef
     with SneakTypeApiImpl
-
-
-
-  final case object SingleType
-    extends SingleTypeMatch
-  {
-    def unapply(tpe: Type): Option[(Type, Symbol)] =
-      None
-  }
 }

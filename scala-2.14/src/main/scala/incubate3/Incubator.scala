@@ -4,7 +4,7 @@ import
   cross.lang._,
   list._,
   Console.{ println ⇒ cprintln },
-  typeinfo._
+  TypeInfo._
 
 object hell0 {
 
@@ -38,7 +38,6 @@ object Incubator {
   type X = X.t
 
   def entry(args: Array[String]): Unit = {
-    args.asInstanceOf[Unit]
     cprintln(typeinfo[X.t])
     cprintln(typeinfo[Vector[(Unit, Int)]])
     cprintln(Nil)

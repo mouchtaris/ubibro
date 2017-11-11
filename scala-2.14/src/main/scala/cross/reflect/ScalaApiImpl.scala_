@@ -22,11 +22,11 @@ trait ApiImpl extends Api {
     stypeOf[T]
 
   trait TypeApiImpl extends Any with super.TypeApi {
-    def dealias: Type = self.dealias
-    def baseClasses: uList[Symbol] = self.baseClasses
-    def baseType(s: Symbol): Type = self.baseType(s)
-    def typeArgs: uList[Type] = self.typeArgs
-    def isSingleType: Boolean =
+    final def dealias: Type = self.dealias
+    final def baseClasses: uList[Symbol] = self.baseClasses
+    final def baseType(s: Symbol): Type = self.baseType(s)
+    final def typeArgs: uList[Type] = self.typeArgs
+    final def isSingleType: Boolean =
       self.isInstanceOf[
         sSingleTypeApi with
         sSingletonTypeApi with
