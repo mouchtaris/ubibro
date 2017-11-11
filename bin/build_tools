@@ -5,6 +5,6 @@ mydir="$( cd "$( dirname "$0" )" && pwd )"
 rootdir="$mydir"/..
 
 true &&
-  git -C "$rootdir" submodule update --init --depth 1 --rebase --recursive -- lib/dotty &&
+  git -C "$rootdir" submodule update --init --checkout --force --recursive -- lib/dotty &&
   cd "$rootdir"/lib/dotty &&
   sbt 'set test in assembly := {}' assembly
