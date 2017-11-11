@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+mydir="$( cd "$( dirname "$0" )" && pwd )"
+rootdir="$mydir"/..
+
+find "$rootdir"/scala-2.14/src/main/scala -iname '*.scala' |
+  tee "$rootdir"/_srclist
+
