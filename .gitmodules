@@ -1,0 +1,4 @@
+[submodule "lib/dotty"]
+	path = lib/dotty
+	url = https://github.com/lampepfl/dotty
+	branch = master
