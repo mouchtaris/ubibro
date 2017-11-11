@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+mydir="$( cd "$( dirname "$0" )" && pwd )"
+rootdir="$mydir"/..
+
+dotopts="$rootdir"/_dotopts
+
+extra="$1"
+shift
+
+tee "$dotopts" <<EOS
+-d /mem/junk
+-sourcepath $rootdir/dotty/src
+-deprecation
+-explain
+-explain-types
+-explain-implicits
+-feature
+-strict
+-unchecked
+EOS
+
+printf '%s' "$extra" | tee -a "$dotopts"
