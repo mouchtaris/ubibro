@@ -7,9 +7,8 @@ object arguments {
   trait NoArgument extends Any with Arguments
   trait CombinedArguments[arg1 <: Arguments, arg2 <: Arguments] extends Any with Arguments
 
-  trait ArgumentsHandler[args <: Arguments, in] {
+  trait ArgumentsHandler[args <: Arguments, +in] {
     final type Args = args
-    final type In = in
   }
 
   trait ArgumentHandler[T[_], in] extends AnyRef
@@ -22,15 +21,17 @@ object arguments {
 
   trait CombinedArgumentsHandler[
     args1 <: Arguments,
-    han1 <: ArgumentsHandler[args1, in],
     args2 <: Arguments,
-    han2 <: ArgumentsHandler[args2, in],
     in
   ] extends AnyRef
     with ArgumentsHandler[CombinedArguments[args1, args2], in]
   {
-    def handler1: han1
-    def handler2: han2
+    type in1
+    type in2
+    type Handler1 <: ArgumentsHandler[args1, in1]
+    type Handler2 <: ArgumentsHandler[args2, in2]
+    val handler1: Handler1
+    val handler2: Handler2
   }
 
 }

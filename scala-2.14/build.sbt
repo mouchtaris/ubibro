@@ -9,7 +9,7 @@ lazy val root = (project in file(".")).
     )),
     inThisBuild {
       import ScalacOptions._
-      standard ++ inConsole ++ inDoc ++ inDocSettings ++ noImports
+      standard ++ inConsole ++ inDoc ++ inDocSettings ++ noImports ++ debug
     },
     name := "Bro",
     libraryDependencies += scalaTest % Test,

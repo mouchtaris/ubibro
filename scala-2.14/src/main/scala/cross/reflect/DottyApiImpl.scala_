@@ -1,0 +1,30 @@
+package cross
+package reflect
+
+trait ApiImpl extends Api {
+
+  final class TypeTag[T]
+  object TypeTag {
+    implicit def typeTag[T]: TypeTag[T] = new TypeTag
+  }
+  final class Type
+  final class Symbol
+
+  def typeOf[T: TypeTag]: Type =
+    new Type
+
+  trait TypeApiImpl extends Any with super.TypeApi {
+    import uList.empty
+    def dealias: Type = self
+    def baseClasses: uList[Symbol] = empty
+    def baseType(s: Symbol): Type = self
+    def typeArgs: uList[Type] = empty
+  }
+
+  final case object SingleType
+    extends SingleTypeMatch
+  {
+    def unapply(tpe: Type): Option[(Type, Symbol)] =
+      None
+  }
+}

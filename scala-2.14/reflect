@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+path=src/main/scala/cross/reflect
+
+function showHelp () {
+  printf 'Set cross.reflect.Api to *scala* or *dotty*.\n'
+}
+
+function death_by () {
+  msg="$1" && shift
+  printf '*** DEATH BY %s ***\n' "$msg" 1>&2
+  exit 1
+}
+
+function setImplSafe () {
+  impl="$1" && shift &&
+    echo setting to "$impl" &&
+    ln -svf "$impl"ApiImpl.scala_ "$path"/ApiImpl.scala
+}
+function setImpl () {
+  impl="$1" && shift && setImplSafe "$impl" || death_by 'setImpl(
+  impl: %i[ Scala Dotty ]
+)'
+}
+
+case $1 in
+  scala)
+    setImpl Scala
+    ;;
+  dotty)
+    setImpl Dotty
+    ;;
+  *)
+    showHelp && death_by 'arguments'
+    ;;
+esac
+

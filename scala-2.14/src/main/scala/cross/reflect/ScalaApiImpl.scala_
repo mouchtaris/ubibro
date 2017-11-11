@@ -1,0 +1,37 @@
+package cross
+package reflect
+
+import scala.reflect.runtime.universe.{
+  Type ⇒ sType,
+  Symbol ⇒ sSymbol,
+  SingleType ⇒ sSingleType,
+  TypeTag ⇒ sTypeTag,
+  typeOf ⇒ stypeOf
+}
+
+trait ApiImpl extends Api {
+
+  final type TypeTag[T] = sTypeTag[T]
+  final type Type = sType
+  final type Symbol = sSymbol
+
+  def typeOf[T: TypeTag]: Type =
+    stypeOf[T]
+
+  trait TypeApiImpl extends Any with super.TypeApi {
+    def dealias: Type = self.dealias
+    def baseClasses: uList[Symbol] = self.baseClasses
+    def baseType(s: Symbol): Type = self.baseType(s)
+    def typeArgs: uList[Type] = self.typeArgs
+  }
+
+  final case object SingleType
+    extends SingleTypeMatch
+  {
+    def unapply(tpe: Type): Option[(Type, Symbol)] =
+      tpe match {
+        case sSingleType(pre, sym) ⇒ Some((pre, sym))
+        case _ ⇒ None
+      }
+  }
+}

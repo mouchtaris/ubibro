@@ -15,9 +15,6 @@ object ScalacOptions {
     "-language:postfixOps",
     "-unchecked",                        // Enable additional warnings where generated code depends on assumptions.
     "-Xcheckinit",                       // Wrap field accessors to throw an exception on uninitialized access.
-//    "-Xfatal-warnings",                  // Fail the compilation if there are any warnings.
-//    "-Xprint:typer",
-//    "-Xlog-implicits",
     "-Xfuture",                          // Turn on future language features.
     "-Xlint:adapted-args",               // Warn if an argument list is modified to match the receiver.
     "-Xlint:by-name-right-associative",  // By-name parameter of right associative operator.
@@ -68,6 +65,12 @@ object ScalacOptions {
   val noImports = scalacOptions ++= Seq(
     "-Yno-predef",   // no automatic import of Predef (removes irritating implicits)
     "-Yno-imports"  // no automatic imports at all; all symbols must be imported explicitly
+  )
+
+  val debug = scalacOptions ++= Seq(
+//    "-Xfatal-warnings",                  // Fail the compilation if there are any warnings.
+//    "-Xprint:typer",
+    "-Xlog-implicits"
   )
 
   val typelevel = scalacOptions ++= Seq(
