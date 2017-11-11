@@ -91,10 +91,11 @@ object Incubator {
   import
     hell0.tag._
 
-  object X extends hell0.tag.Tagverse { type T = Int }
+  object X extends Tagverse { type T = Int }
   type X = X.t
 
   def entry(args: Array[String]): Unit = {
+    args.asInstanceOf[Unit]
     cprintln(typeinfo[X.t])
     cprintln(Nil)
   }

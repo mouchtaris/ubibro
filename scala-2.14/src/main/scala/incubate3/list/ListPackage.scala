@@ -17,7 +17,7 @@ trait ListPackage {
 
   }
 
-  final case class Cons[h, t <: List](
+  case class Cons[h, t <: List](
     head: h,
     tail: t
   ) extends (h :: t)
