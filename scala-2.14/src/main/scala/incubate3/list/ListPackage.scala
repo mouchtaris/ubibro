@@ -5,7 +5,7 @@ trait ListPackage {
 
   final type List = _ :: _
 
-  sealed trait ::[+h, +t <: List] extends Any {
+  sealed trait ::[+h, +t <: List] {
 
     def head: h
 

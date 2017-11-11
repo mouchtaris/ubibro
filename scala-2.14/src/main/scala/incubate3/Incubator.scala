@@ -58,8 +58,8 @@ object TypeInfo {
 
   }
 
-  def typeinfo[T: TypeTag]: String =
-    typeinfo(typeOf[T])
+  def typeinfo[T](implicit tt: TypeTag[T]): String =
+    typeinfo(typeOf[T](tt))
 }
 import TypeInfo._
 

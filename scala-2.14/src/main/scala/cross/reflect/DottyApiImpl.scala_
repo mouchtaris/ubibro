@@ -3,23 +3,30 @@ package reflect
 
 trait ApiImpl extends Api {
 
-  final class TypeTag[T]
-  object TypeTag {
-    implicit def typeTag[T]: TypeTag[T] = new TypeTag
-  }
-  final class Type
-  final class Symbol
+  final implicit case object Yes
+  final type Yes = Yes.type
 
-  def typeOf[T: TypeTag]: Type =
-    new Type
+  final type TypeTag[_] = Yes
+  final case object Type
+  final type Type = Type.type
 
-  trait TypeApiImpl extends Any with super.TypeApi {
+  def typeOf[T: TypeTag]: Type = Type
+
+  trait TypeApiImpl extends Any
+
+  trait SneakTypeApiImpl extends TypeApi {
     import uList.empty
-    def dealias: Type = self
-    def baseClasses: uList[Symbol] = empty
-    def baseType(s: Symbol): Type = self
-    def typeArgs: uList[Type] = empty
+    final def dealias: Type = Type
+    final def baseClasses: uList[Symbol] = empty
+    final def baseType(s: Symbol): Type = Type
+    final def typeArgs: uList[Type] = empty
   }
+
+  final implicit class SneakTypeApiDeco(val self: Type)
+    extends AnyRef
+    with SneakTypeApiImpl
+
+
 
   final case object SingleType
     extends SingleTypeMatch
