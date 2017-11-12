@@ -68,11 +68,50 @@ object hell0 {
 
   object listops {
 
-    final class Map[f[_], list <: List, out <: List](val self: Unit) extends AnyVal
+    final class Map[f[_], list <: List, out <: List](val self: Unit) extends AnyVal {
+      type Out = out
+    }
     sealed trait MapResultOf[f[_], list <: List]
       extends Any
-      { type t[out <: List] = Map[f, list, list] }
+      { type t[out <: List] = Map[f, list, out] }
+    object Map {
+      final type resultOf[f[_], list <: List] = MapResultOf[f, list]
+      implicit def fromUnit[f[_], list <: List, out <: List](u: Unit): Map[f, list, out] = new Map(u)
 
+      implicit def mapNil[f[_]]: Map[f, Nil, Nil] = ()
+      implicit def mapList[
+        f[_],
+        h, t <: List,
+        tmap <: List: resultOf[f, t]#t
+      ]: Map[f, h :: t, f[h] :: tmap] = ()
+
+      final class Getter[f[_], list <: List](val self: Unit) extends AnyVal {
+        def apply[out <: List: resultOf[f, list]#t](): Map[f, list, out] = ()
+      }
+      def apply[f[_], list <: List] = new Getter[f, list](())
+    }
+
+    final class Fold[f[_, _], list <: List, out <: f[_, _]](val self: Unit) extends AnyVal {
+      type Out = out
+    }
+    object Fold {
+      final type resultOf[f[_, _], list <: List] = {
+        type t[out <: f[_, _]] = Fold[f, list, out]
+      }
+      implicit def fromUnit[f[_, _], list <: List, out <: f[_, _]](u: Unit): Fold[f, list, out] = new Fold[f, list, out](u)
+
+      implicit def foldNil[f[_, _]]: Fold[f, Nil, f[Nil, Nil]] = ()
+      implicit def foldList[
+        f[_, _],
+        h, t <: List,
+        tfold <: f[_, _]: resultOf[f, t]#t
+      ]: Fold[f, h :: t, f[h, tfold]] = ()
+
+      final class Getter[f[_, _], list <: List](val self: Unit) extends AnyVal {
+        def apply[out <: f[_, _]: resultOf[f, list]#t](): Fold[f, list, out] = ()
+      }
+      def apply[f[_, _], list <: List] = new Getter[f, list](())
+    }
   }
 
 }
@@ -82,7 +121,8 @@ object Incubator {
     hell0.tag._
 
   def entry(args: Array[String]): Unit = {
-    new Tests.evidenceTest
+    new test.evidenceTest
+    new test.listopsTest
   }
 
 }
