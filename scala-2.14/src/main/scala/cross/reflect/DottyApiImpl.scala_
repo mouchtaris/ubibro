@@ -1,6 +1,9 @@
 package cross
 package reflect
 
+import
+  common.StdImports._
+
 trait ApiImpl extends Api {
 
   final implicit case object Yes

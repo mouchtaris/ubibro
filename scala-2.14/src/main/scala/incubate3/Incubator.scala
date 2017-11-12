@@ -24,18 +24,20 @@ object hell0 {
   }
 
   object ghosts {
-    sealed trait ResultOf
-      extends Any
-    {
-      type t[out]
+
+    class Getter[ev[_ <: U], U](val self: Unit) extends AnyVal {
+      def apply[t <: U: ev](): ev[t] = implicitly
     }
 
-    final implicit class Getter[resultOf[_]](val self: Unit) extends AnyVal {
-      def apply[l: resultOf](): resultOf[l] = implicitly
+    trait ResultOf2Ext[U] extends Any {
+      type on[a, b] = {
+        type t[_ <: U]
+      }
     }
 
-    trait Getter2[resultOf[_, _] <: ResultOf] {
-      def apply[a, b]: Getter[resultOf[a, b]#t] = ()
+    trait Getter2[U] {
+      val resultOf: ResultOf2Ext[U]
+      def apply[a, b] = new Getter[resultOf.on[a, b]#t, U](())
     }
 
   }
@@ -59,14 +61,12 @@ object hell0 {
     final type ||[a, b] = Or[a, b, _]
     sealed trait OrResultOf[a, b]
       extends Any
-        with ghosts.ResultOf
-    {
-      final type t[out] = Or[a, b, out]
-    }
+      with ghosts.ResultOfExt[Any]
+      { final type t[out] = Or[a, b, out] }
     object Or
       extends AnyRef
       with OrDeductionA
-      with ghosts.Getter2[OrResultOf]
+      with ghosts.Getter2[OrResultOf, Any]
     {
       final type resultOf[a, b] = OrResultOf[a, b]
       implicit def fromUnit[a, b, ev](u: Unit): Or[a, b, ev] = new Or(u)
@@ -76,6 +76,16 @@ object hell0 {
     object && {
       implicit def fromAB[a: Implicit, b: Implicit]: a && b = ()
     }
+
+  }
+
+  object listops {
+
+    final class Map[f[_], list <: List, out <: List](val self: Unit) extends AnyVal
+    sealed trait MapResultOf[f[_], list <: List]
+      extends Any
+      with ghosts.ResultOfExt[List]
+      { type t[out <: List] = Map[f, list, list] }
 
   }
 
