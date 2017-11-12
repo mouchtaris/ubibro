@@ -1,6 +1,8 @@
+import
+  common.StdImports._
+
 package object list
   extends scala.AnyRef
-  with common.StdImports
   with ListPackage
 {
 

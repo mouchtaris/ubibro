@@ -1,6 +1,7 @@
 package TypeInfo
 
 import
+  common.StdImports._,
   cross.reflect.Api._,
   console.ind,
   ind.{ apply ⇒ pkg_ind }

@@ -37,4 +37,10 @@ trait StdImports {
   def implicitly[t](implicit t: t): t = t
   def ??? = p.???
 
+  type Implicit[T] = T
+  type Known[+T <: AnyRef] = T
+  def known[t <: AnyRef](implicit t: t): t.type = t
+
 }
+
+object StdImports extends StdImports

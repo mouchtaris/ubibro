@@ -1,5 +1,8 @@
 package list
 
+import
+  common.StdImports._
+
 trait ListPackage {
 
   final type List = _ :: _

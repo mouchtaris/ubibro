@@ -2,6 +2,7 @@ package cross
 package reflect
 
 import
+  common.StdImports._,
   scala.reflect.runtime.universe.{
     Type ⇒ sType,
     Symbol ⇒ sSymbol,
