@@ -1,1 +1,1 @@
-DottyTypes.scala_
+ScalaTypes.scala_

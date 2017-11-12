@@ -64,6 +64,30 @@ object hell0 {
       implicit def fromAB[a: Implicit, b: Implicit]: a && b = ()
     }
 
+    import listops._
+
+    final class ForAll[p[_], list <: List, out](val self: Unit) extends AnyVal {
+      type Out = out
+    }
+    trait ForAllResultOf[p[_], list <: List] {
+      type t[out] = ForAll[p, list, out]
+    }
+    object ForAll {
+      type resultOf[p[_], list <: List] = ForAllResultOf[p, list]
+      implicit def fromUnit[p[_], list <: List, out](u: Unit): ForAll[p, list, out] = new ForAll(u)
+
+      implicit def listForAll[
+        p[_],
+        list <: List,
+        listMap <: List: Map.resultOf[p, list]#t,
+        listFold: Fold.resultOf[&&, listMap]#t: Implicit
+      ]: ForAll[p, list, listFold] = ()
+
+      final class Getter[p[_], list <: List](val self: Unit) extends AnyVal {
+        def apply[out: resultOf[p, list]#t]: ForAll[p, list, out] = ()
+      }
+      def apply[p[_], list <: List] = new Getter[p, list](())
+    }
   }
 
   object listops {
@@ -91,24 +115,25 @@ object hell0 {
       def apply[f[_], list <: List] = new Getter[f, list](())
     }
 
-    final class Fold[f[_, _], list <: List, out <: f[_, _]](val self: Unit) extends AnyVal {
+    final class Fold[f[_, _], list <: List, out](val self: Unit) extends AnyVal {
       type Out = out
     }
+    trait FoldResultOf[f[_, _], list <: List] extends Any {
+      type t[out] = Fold[f, list, out]
+    }
     object Fold {
-      final type resultOf[f[_, _], list <: List] = {
-        type t[out <: f[_, _]] = Fold[f, list, out]
-      }
-      implicit def fromUnit[f[_, _], list <: List, out <: f[_, _]](u: Unit): Fold[f, list, out] = new Fold[f, list, out](u)
+      final type resultOf[f[_, _], list <: List] = FoldResultOf[f, list]
+      implicit def fromUnit[f[_, _], list <: List, out](u: Unit): Fold[f, list, out] = new Fold[f, list, out](u)
 
       implicit def foldNil[f[_, _]]: Fold[f, Nil, f[Nil, Nil]] = ()
       implicit def foldList[
         f[_, _],
         h, t <: List,
-        tfold <: f[_, _]: resultOf[f, t]#t
+        tfold: resultOf[f, t]#t
       ]: Fold[f, h :: t, f[h, tfold]] = ()
 
       final class Getter[f[_, _], list <: List](val self: Unit) extends AnyVal {
-        def apply[out <: f[_, _]: resultOf[f, list]#t](): Fold[f, list, out] = ()
+        def apply[out: resultOf[f, list]#t](): Fold[f, list, out] = ()
       }
       def apply[f[_, _], list <: List] = new Getter[f, list](())
     }
