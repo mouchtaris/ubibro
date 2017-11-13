@@ -23,5 +23,9 @@ class evidenceTest {
   val boc = implicitly[ B || C ]
   val aob = implicitly[ A || B ]
   val coa = implicitly[ C || A ]
+
+
+  import list._
+  implicitly[ForAll[Clue, A :: C :: Nil, _]]
 }
 

@@ -69,7 +69,7 @@ object hell0 {
     final class ForAll[p[_], list <: List, out](val self: Unit) extends AnyVal {
       type Out = out
     }
-    trait ForAllResultOf[p[_], list <: List] {
+    trait ForAllResultOf[p[_], list <: List] extends Any {
       type t[out] = ForAll[p, list, out]
     }
     object ForAll {
@@ -85,6 +85,29 @@ object hell0 {
 
       final class Getter[p[_], list <: List](val self: Unit) extends AnyVal {
         def apply[out: resultOf[p, list]#t]: ForAll[p, list, out] = ()
+      }
+      def apply[p[_], list <: List] = new Getter[p, list](())
+    }
+
+    final class ForAny[p[_], list <: List, out](val self: Unit) extends AnyVal {
+      type Out = out
+    }
+    trait ForAnyResultOf[p[_], list <: List] extends Any {
+      type t[out] = ForAny[p, list, out]
+    }
+    object ForAny {
+      type resultOf[p[_], list <: List] = ForAnyResultOf[p, list]
+      implicit def fromUnit[p[_], list <: List, out](u: Unit): ForAny[p, list, out] = new ForAny(u)
+
+      implicit def listForAny[
+        p[_],
+        list <: List,
+        listMap <: List: Map.resultOf[p, list]#t,
+        listFold: Fold.resultOf[||, listMap]#t: Implicit
+      ]: ForAny[p, list, listFold] = ()
+
+      final class Getter[p[_], list <: List](val self: Unit) extends AnyVal {
+        def apply[out: resultOf[p, list]#t]: ForAny[p, list, out] = ()
       }
       def apply[p[_], list <: List] = new Getter[p, list](())
     }
