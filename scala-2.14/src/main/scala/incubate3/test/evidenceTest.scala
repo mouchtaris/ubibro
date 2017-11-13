@@ -1,6 +1,9 @@
 package incubate3
 package test
 
+import
+  Console.{ println ⇒ cprintln }
+
 class evidenceTest {
   import hell0.evidence._
 
@@ -27,5 +30,11 @@ class evidenceTest {
 
   import list._
   implicitly[ForAll[Clue, A :: C :: Nil, _]]
+
+  object D { def f = 23 }
+  object E { def f = 48 }
+  implicit val ev = D
+  cprintln( Or[D.type, E.type]().evidence.f )
+  cprintln( Or[D.type, E.type]() apply ("you", 12) )
 }
 

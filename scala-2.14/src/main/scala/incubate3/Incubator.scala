@@ -27,8 +27,38 @@ object hell0 {
 
   object evidence {
 
-    final class Or[a, b, ev](val self: Unit) extends AnyVal {
+    trait Select[a, b, about, x, y, xyout] extends Any {
+      final type Out = xyout
+      def apply(x: ⇒ x, y: ⇒ y): Out
+    }
+    trait Selector[a, b, out] extends Any {
+      type Select[aa, bb, about, x, y, xyout] <: evidence.Select[aa, bb, about, x, y, xyout]
+      final def apply[x, y, xyout](x: ⇒ x, y: ⇒ y)(implicit s: Select[a, b, out, x, y, xyout]): s.Out = s(x, y)
+    }
+
+    abstract class OrSelect[a, b, ev, x, y, out]
+      extends AnyRef
+      with Select[a, b, ev, x, y, out]
+    trait OrSelectB extends Any {
+      implicit def fromB[a, b: Implicit, x, y]: OrSelect[a, b, b, x, y, y] =
+        new OrSelect[a, b, b, x, y, y] {
+          def apply(x: ⇒ x, y: ⇒ y): y = y
+        }
+    }
+    trait OrSelectA extends Any with OrSelectB {
+      implicit def fromA[a: Implicit, b, x, y]: OrSelect[a, b, a, x, y, x] =
+        new OrSelect[a, b, a, x, y, x] {
+          def apply(x: ⇒ x, y: ⇒ y): x = x
+        }
+    }
+    object OrSelect extends OrSelectA
+    final class Or[a, b, ev](val self: Unit)
+      extends AnyVal
+      with Selector[a, b, ev]
+    {
       type Ev = ev
+      type Select[aa, bb, eev, x, y, xyout] = OrSelect[aa, bb, eev, x, y, xyout]
+      def evidence(implicit ev: Ev): Ev = ev
     }
     sealed trait OrDeductionB
       extends Any
