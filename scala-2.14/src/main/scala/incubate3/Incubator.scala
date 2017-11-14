@@ -172,11 +172,11 @@ object hell0 {
 
 }
 
-object Incubator {
+object Incubator extends java.lang.Runnable {
   import
     hell0.tag._
 
-  def entry(args: Array[String]): Unit = {
+  def run(): Unit = {
     new test.evidenceTest
     new test.listopsTest
   }
