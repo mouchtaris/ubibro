@@ -32,7 +32,7 @@ trait ListPackage {
 
   sealed trait Nil extends (Nil :: Nil)
 
-  final case object Nil extends Nil {
+  final val Nil: Nil = new Nil {
 
     val head = this
 

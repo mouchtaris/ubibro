@@ -31,10 +31,9 @@ class evidenceTest {
   import list._
   implicitly[ForAll[Clue, A :: C :: Nil, _]]
 
-  object D { def f = 23 }
+  implicit object D { def f = 23 }
   object E { def f = 48 }
-  implicit val ev = D
   cprintln( Or[D.type, E.type]().evidence.f )
-  cprintln( Or[D.type, E.type]() apply ("you", 12) )
+//  cprintln( Or[D.type, E.type]() apply ("you", 12) )
 }
 
