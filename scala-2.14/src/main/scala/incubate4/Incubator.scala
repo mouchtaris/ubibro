@@ -33,26 +33,33 @@ object Incubator
     final type Instance = tagged
   }
 
+  trait RecordEvidence
+    extends Any
+  {
+    this: Record[_] ⇒
+    final class Evidence[args <: List] {
+      type Args = args
+    }
+  }
+  trait Record[rec <: List]
+    extends Any
+    with RecordEvidence
+  {
+    final type Record = rec
+  }
+
   trait int extends Named[Int]
 
   object x extends int; type x = x.type
   object y extends int; type y = y.type
 
-  type vec2 = (x :: y :: Nil)
+  object vec2 extends Record[x :: y :: Nil]
+  type vec2 = vec2.type
 
-  case class create[rec <: List]() {
-    case class bind[args <: List](args: args) {
-      def eval(
-        implicit dummyImplicit: DummyImplicit
-      ) = {
-        dummyImplicit
-      }
-    }
-  }
+  def is[r <: Record[_]](record: r) = false
   def pt[t: TypeTag] = cprintln(typeinfo[t])
   def run(): Unit = {
-    val you = create[vec2]().bind(y(18) :: x(32) :: Nil).eval
-    cprintln(you)
+    cprintln { is(vec2) }
   }
 }
 
