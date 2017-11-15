@@ -5,12 +5,12 @@ import
   common.StdImports._
 
 trait Tagverse {
-  type T
+  type BaseType
 
   sealed abstract trait tag extends Any
-  final type t = T & tag
+  final type tagged = BaseType & tag
 
-  def apply(t: T): t = t.asInstanceOf[t]
-  def unapply(t: t): T = t
+  def apply(t: BaseType): tagged = t.asInstanceOf[tagged]
+  def unapply(t: tagged): BaseType = t
 }
 
