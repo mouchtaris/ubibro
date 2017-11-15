@@ -24,8 +24,12 @@ object Incubator
   final type True = True.type
   final type True1[_] = True
 
+  trait Type {
+    type Instance
+  }
   trait Named[t]
     extends AnyRef
+    with Type
     with Tagverse
     with ImplicitEvidence
   {
@@ -33,33 +37,55 @@ object Incubator
     final type Instance = tagged
   }
 
-  trait RecordEvidence
-    extends Any
-  {
-    this: Record[_] ⇒
-    final class Evidence[args <: List] {
-      type Args = args
-    }
-  }
   trait Record[rec <: List]
-    extends Any
+    extends AnyRef
     with RecordEvidence
   {
     final type Record = rec
+  }
+
+  trait Extension[rec <: Record[_], ext <: List]
+    extends AnyRef
+  {
+
+  }
+
+  trait RecordEvidence
+    extends AnyRef
+  {
+    this: Record[_] ⇒
+    trait Evidence[args <: List]
   }
 
   trait int extends Named[Int]
 
   object x extends int; type x = x.type
   object y extends int; type y = y.type
-
+  object z extends int; type z = z.type
   object vec2 extends Record[x :: y :: Nil]
   type vec2 = vec2.type
+  object vec3 extends Extension[vec2, z :: Nil]
 
-  def is[r <: Record[_]](record: r) = false
+  trait Contains[list <: List, T] {
+    def apply(list: list): T
+  }
+  object Contains {
+    implicit def fromHead[h, t <: List, T](implicit ev: h <:< T): Contains[h :: t, T] =
+      list ⇒ ev(list.head)
+    implicit def fromTail[h, t <: List, T](implicit ev: Contains[t, T]): Contains[h :: t, T] =
+      list ⇒ ev(list.tail)
+  }
+  def get[t <: Type, args <: List](typ: t)(args: args)(
+    implicit
+    ev: Contains[args, typ.Instance]
+  ): typ.Instance =
+    ev(args)
+
   def pt[t: TypeTag] = cprintln(typeinfo[t])
   def run(): Unit = {
-    cprintln { is(vec2) }
+    val v = x(12) :: y(13) :: Nil
+    cprintln { get(x)(v) }
+    cprintln { get(y)(v) }
   }
 }
 
