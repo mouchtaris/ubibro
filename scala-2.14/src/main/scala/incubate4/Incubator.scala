@@ -40,37 +40,19 @@ object Incubator
 
   type vec2 = (x :: y :: Nil)
 
-  object Bollock
-  type Bollock = Bollock.type
-  trait NamedConstructionReason
-  object NamedConstructionReason {
-    implicit def namedConstruction[n <: Named[_], r <: List](implicit n: n)
-      : n.BaseType ⇒ n.Instance = n(_: n.BaseType)
-  }
-
-  trait NamedConstruct[rec <: List, arg, out] {
-    final type Arg = arg
-    final type Out = out
-    def apply(argument: Arg): Out
-  }
-  object NamedConstruct {
-    implicit def nconstruct[n <: Named[_], r <: List](implicit n: n)
-      : NamedConstruct[n :: r, n.BaseType, n.Instance] =
-        n(_: n.BaseType)
-  }
   case class create[rec <: List]() {
     case class bind[args <: List](args: args) {
       def eval(
-        implicit
-        ctr: NamedConstruct[rec, _, _]
+        implicit dummyImplicit: DummyImplicit
       ) = {
-        ()
+        dummyImplicit
       }
     }
   }
   def pt[t: TypeTag] = cprintln(typeinfo[t])
   def run(): Unit = {
-    cprintln ( create[vec2]().bind(y(18) :: x(32) :: Nil).eval )
+    val you = create[vec2]().bind(y(18) :: x(32) :: Nil).eval
+    cprintln(you)
   }
 }
 
