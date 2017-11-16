@@ -7,7 +7,8 @@ import
   TypeInfo._,
   done._,
   tag._,
-  cross.reflect.Api.{ TypeTag }
+  cross.reflect.Api.{ TypeTag },
+  listops._
 
 object Incubator
   extends AnyRef
@@ -66,18 +67,9 @@ object Incubator
   type vec2 = vec2.type
   object vec3 extends Extension[vec2, z :: Nil]
 
-  trait Contains[list <: List, T] {
-    def apply(list: list): T
-  }
-  object Contains {
-    implicit def fromHead[h, t <: List, T](implicit ev: h <:< T): Contains[h :: t, T] =
-      list ⇒ ev(list.head)
-    implicit def fromTail[h, t <: List, T](implicit ev: Contains[t, T]): Contains[h :: t, T] =
-      list ⇒ ev(list.tail)
-  }
   def get[t <: Type, args <: List](typ: t)(args: args)(
     implicit
-    ev: Contains[args, typ.Instance]
+    ev: Get[args, typ.Instance]
   ): typ.Instance =
     ev(args)
 
@@ -158,7 +150,7 @@ object junk000
   }
   abstract class Record[fields <: List](
     implicit
-    rfields: RecordFields[fields],
+    rfields: RecordFields[fields]
   )
     extends AnyRef
       with ImplicitEvidence
@@ -167,10 +159,6 @@ object junk000
     val fields = rfields.fields
 
   }
-  //trait Extend {
-  //  type Record <: Incubator.Record
-  //  type Fields <: List
-  //}
 
   implicit case object int
     extends AnyRef
@@ -189,12 +177,6 @@ object junk000
   val x1 = x(12)
   val y1 = y(18)
   val z1 = z(32)
-  //  val vec = vec2(x1 :: y1 :: Nil)
-
-  //implicit case object vec3 extends Extend {
-  //  type Record = vec2
-  //  type List = z :: Nil
-  //}
 
   def run(): Unit = cprintln(1)
 
